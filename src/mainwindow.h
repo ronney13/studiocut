@@ -57,6 +57,9 @@ class NotesDock;
 class SubtitlesDock;
 class ScreenCapture;
 class HdrPreviewWindow;
+class StudioShell;
+class QQuickWidget;
+class QStackedLayout;
 
 class MainWindow : public QMainWindow
 {
@@ -116,6 +119,11 @@ public:
     Mlt::Playlist *binPlaylist();
     void showInFiles(const QString &filePath);
     void turnOffHardwareDecoder();
+    bool showStudioPanel(const QString &panel);
+    void hideStudioPanels();
+    void showStudioStage(bool welcome);
+    void beginNewProject();
+    QMenu *studioMenu(const QString &name) const;
 
 signals:
     void audioChannelsChanged();
@@ -145,6 +153,8 @@ private:
     void connectUISignals();
     void setupAndConnectUndoStack();
     void setupAndConnectPlayerWidget();
+    void setupStudioShell();
+    void applyModernLayout();
     void setupLayoutSwitcher();
     void centerLayoutInRemainingToolbarSpace();
     void setupAndConnectDocks();
@@ -233,6 +243,14 @@ private:
     ScreenCapture *m_screenCapture;
     HdrPreviewWindow *m_hdrPreviewWindow{nullptr};
     bool m_syncingZoom{false};
+    QWidget *m_stage{nullptr};
+    QStackedLayout *m_stageLayout{nullptr};
+    StudioShell *m_shell{nullptr};
+    QQuickWidget *m_topBar{nullptr};
+    QQuickWidget *m_navRail{nullptr};
+    QQuickWidget *m_welcome{nullptr};
+    bool m_switchingStage{false};
+    bool m_suppressWelcomeSync{false};
 
 public slots:
     bool isCompatibleWithProcessingMode(MltXmlChecker &checker, QString &fileName, bool &converted);

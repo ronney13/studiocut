@@ -206,17 +206,15 @@ public:
 #ifndef Q_OS_WIN
         QCommandLineOption fullscreenOption(
             "fullscreen",
-            QCoreApplication::translate("main",
-                                        "Fill the screen with the Vídeo Studio BR window."));
+            QCoreApplication::translate("main", "Fill the screen with the Vídeo Studio BR window."));
         parser.addOption(fullscreenOption);
 #endif
         QCommandLineOption noupgradeOption(
             "noupgrade", QCoreApplication::translate("main", "Hide upgrade prompt and menu item."));
         parser.addOption(noupgradeOption);
-        QCommandLineOption
-            glaxnimateOption("glaxnimate",
-                             QCoreApplication::translate("main",
-                                                         "Run Glaxnimate instead of Vídeo Studio BR."));
+        QCommandLineOption glaxnimateOption(
+            "glaxnimate",
+            QCoreApplication::translate("main", "Run Glaxnimate instead of Vídeo Studio BR."));
         parser.addOption(glaxnimateOption);
         QCommandLineOption gpuOption("gpu",
                                      QCoreApplication::translate("main", "Use GPU processing."));
@@ -547,7 +545,8 @@ int main(int argc, char **argv)
     ::qputenv(kWatchdogEnvVar, "1");
 #endif
     if (::qEnvironmentVariableIsSet(kWatchdogEnvVar)) {
-        QSplashScreen splash(QPixmap(":/icons/shotcut-logo-320x320.png"));
+        QSplashScreen splash(QPixmap(":/icons/studiocut-logo-64.svg")
+                                 .scaled(320, 320, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
         // Log some basic info.
         LOG_INFO() << "Starting Shotcut version" << SHOTCUT_VERSION;

@@ -65,6 +65,7 @@
 #include "screencapture/screencapture.h"
 #include "settings.h"
 #include "shotcut_mlt_properties.h"
+#include "studioshell.h"
 #include "util.h"
 #include "videowidget.h"
 #include "widgets/alsawidget.h"
@@ -115,6 +116,9 @@
 #include <QWhatsThis>
 #include <QtConcurrent/QtConcurrentRun>
 #include <QtNetwork>
+#include <QtQml/QQmlContext>
+#include <QtQml/QQmlError>
+#include <QtQuickWidgets/QQuickWidget>
 #include <QtWidgets>
 
 #include <algorithm>
@@ -221,8 +225,9 @@ MainWindow::MainWindow()
 
     setupAndConnectUndoStack();
 
-    // Add the player widget.
+    // Add the player widget and the new QML shell around it.
     setupAndConnectPlayerWidget();
+    setupStudioShell();
 
     setupSettingsMenu();
     readPlayerSettings();
@@ -246,6 +251,7 @@ MainWindow::MainWindow()
     readWindowSettings();
     setupActions();
     setupLayoutSwitcher();
+    applyModernLayout();
 
     setFocus();
     setCurrentFile("");
@@ -332,8 +338,14 @@ void MainWindow::setupAndConnectPlayerWidget()
     m_player = new Player;
     MLT.videoWidget()->installEventFilter(this);
     qApp->installEventFilter(this); // Install global event filter for WhatsThis events
-    ui->centralWidget->layout()->addWidget(m_player);
+    // O palco alterna entre o player e a tela de boas-vindas QML.
+    m_stage = new QWidget;
+    m_stageLayout = new QStackedLayout(m_stage);
+    m_stageLayout->setContentsMargins(0, 0, 0, 0);
+    m_stageLayout->addWidget(m_player);
+    ui->centralWidget->layout()->addWidget(m_stage);
     connect(this, &MainWindow::producerOpened, m_player, &Player::onProducerOpened);
+    connect(this, &MainWindow::producerOpened, this, [this]() { showStudioStage(false); });
     connect(m_player, SIGNAL(showStatusMessage(QString)), this, SLOT(showStatusMessage(QString)));
     connect(m_player, SIGNAL(inChanged(int)), this, SLOT(onCutModified()));
     connect(m_player, SIGNAL(outChanged(int)), this, SLOT(onCutModified()));
@@ -375,6 +387,218 @@ void MainWindow::setupAndConnectPlayerWidget()
     ui->menuPlayer->addAction(Actions["playerSetPositionAction"]);
     ui->menuPlayer->addAction(Actions["playerToggleVui"]);
     ui->menuPlayer->addAction(Actions["playerSwitchSourceProgramAction"]);
+}
+
+void MainWindow::setupStudioShell()
+{
+    m_shell = new StudioShell(this, this);
+
+    const QDir shellDir = QmlUtilities::qmlDir();
+    auto makeShellView = [this, &shellDir](const QString &fileName) {
+        auto *view = new QQuickWidget(this);
+        view->setResizeMode(QQuickWidget::SizeRootObjectToView);
+        view->rootContext()->setContextProperty(QStringLiteral("shell"), m_shell);
+        view->setSource(
+            QUrl::fromLocalFile(shellDir.filePath(QStringLiteral("views/shell/") + fileName)));
+#ifdef QT_DEBUG
+        if (view->status() != QQuickWidget::Ready) {
+            QString report = QStringLiteral("Falha ao carregar %1 (status=%2)\n")
+                                 .arg(fileName)
+                                 .arg(view->status());
+            for (const QQmlError &error : view->errors())
+                report += error.toString() + QStringLiteral("\n");
+            QFile diagnostic(QDir::temp().filePath(QStringLiteral("vsb-qml-error.txt")));
+            if (diagnostic.open(QIODevice::WriteOnly | QIODevice::Append))
+                diagnostic.write(report.toUtf8());
+        }
+#endif
+        return view;
+    };
+
+    m_topBar = makeShellView(QStringLiteral("TopBar.qml"));
+    m_topBar->setObjectName(QStringLiteral("studioTopBar"));
+    m_topBar->setFixedHeight(66);
+    setMenuWidget(m_topBar);
+
+    m_navRail = makeShellView(QStringLiteral("NavRail.qml"));
+    m_navRail->setObjectName(QStringLiteral("studioNavRail"));
+    m_navRail->setFixedWidth(78);
+    if (auto *centralLayout = qobject_cast<QHBoxLayout *>(ui->centralWidget->layout()))
+        centralLayout->insertWidget(0, m_navRail);
+
+    m_welcome = makeShellView(QStringLiteral("Welcome.qml"));
+    m_welcome->setObjectName(QStringLiteral("studioWelcome"));
+    m_stageLayout->addWidget(m_welcome);
+    m_stageLayout->setCurrentWidget(m_welcome);
+}
+
+void MainWindow::applyModernLayout()
+{
+    // A nova casca QML substitui a barra de menus e a barra de ferramentas clássicas.
+    ui->menuBar->hide();
+    // Os menus precisam ser filhos diretos da janela: um QMenu filho de um
+    // widget oculto não exibe seu popup e pode causar falha ao abrir.
+    for (QAction *menuAction : ui->menuBar->actions()) {
+        if (QMenu *menu = menuAction->menu())
+            menu->setParent(this);
+    }
+    ui->mainToolBar->hide();
+    if (ui->menuLayout)
+        ui->menuLayout->menuAction()->setVisible(false);
+    for (auto *action : {ui->actionLayoutLogging,
+                         ui->actionLayoutEditing,
+                         ui->actionLayoutEffects,
+                         ui->actionLayoutColor,
+                         ui->actionLayoutAudio,
+                         ui->actionLayoutPlayer,
+                         ui->actionLayoutClip,
+                         ui->actionLayoutPlaylist})
+        action->setVisible(false);
+
+    // Painéis laterais em uma única pilha de abas à direita.
+    QList<QDockWidget *> panels;
+    for (auto *dock : {static_cast<QDockWidget *>(m_filesDock),
+                       static_cast<QDockWidget *>(m_recentDock),
+                       static_cast<QDockWidget *>(m_playlistDock),
+                       static_cast<QDockWidget *>(m_filtersDock),
+                       static_cast<QDockWidget *>(m_propertiesDock),
+                       static_cast<QDockWidget *>(m_encodeDock),
+                       static_cast<QDockWidget *>(m_historyDock),
+                       static_cast<QDockWidget *>(m_jobsDock),
+                       static_cast<QDockWidget *>(m_elementsDock),
+                       static_cast<QDockWidget *>(m_notesDock),
+                       static_cast<QDockWidget *>(m_subtitlesDock)}) {
+        if (!dock)
+            continue;
+        dock->setFloating(false);
+        addDockWidget(Qt::RightDockWidgetArea, dock);
+        panels << dock;
+    }
+    for (int i = 1; i < panels.size(); ++i)
+        tabifyDockWidget(panels.at(i - 1), panels.at(i));
+
+    // Linha do tempo sempre na base, com keyframes e marcadores em abas.
+    if (m_timelineDock) {
+        addDockWidget(Qt::BottomDockWidgetArea, m_timelineDock);
+        if (m_keyframesDock) {
+            addDockWidget(Qt::BottomDockWidgetArea, m_keyframesDock);
+            tabifyDockWidget(m_keyframesDock, m_timelineDock);
+        }
+        if (m_markersDock) {
+            addDockWidget(Qt::BottomDockWidgetArea, m_markersDock);
+            tabifyDockWidget(m_keyframesDock ? static_cast<QDockWidget *>(m_keyframesDock)
+                                             : static_cast<QDockWidget *>(m_timelineDock),
+                             static_cast<QDockWidget *>(m_markersDock));
+        }
+    }
+
+    hideStudioPanels();
+    if (m_timelineDock) {
+        m_timelineDock->show();
+        m_timelineDock->raise();
+    }
+    for (auto *dock : findChildren<QDockWidget *>()) {
+        if (panels.contains(dock) || dock == m_timelineDock || dock == m_keyframesDock
+            || dock == m_markersDock)
+            continue;
+        dock->hide();
+    }
+    if (!panels.isEmpty())
+        resizeDocks(panels, QList<int>(panels.size(), 380), Qt::Horizontal);
+    if (m_timelineDock)
+        resizeDocks({m_timelineDock}, {240}, Qt::Vertical);
+    resetDockCorners();
+}
+
+bool MainWindow::showStudioPanel(const QString &panel)
+{
+    QDockWidget *dock = nullptr;
+    if (panel == QStringLiteral("media"))
+        dock = m_filesDock;
+    else if (panel == QStringLiteral("recent"))
+        dock = m_recentDock;
+    else if (panel == QStringLiteral("playlist"))
+        dock = m_playlistDock;
+    else if (panel == QStringLiteral("filters"))
+        dock = m_filtersDock;
+    else if (panel == QStringLiteral("properties"))
+        dock = m_propertiesDock;
+    else if (panel == QStringLiteral("export"))
+        dock = m_encodeDock;
+    else if (panel == QStringLiteral("history"))
+        dock = m_historyDock;
+    else if (panel == QStringLiteral("jobs"))
+        dock = m_jobsDock;
+    else if (panel == QStringLiteral("elements"))
+        dock = m_elementsDock;
+
+    if (!dock)
+        return false;
+    if (dock->isVisible() && !dock->isFloating()) {
+        dock->hide();
+        return false;
+    }
+    hideStudioPanels();
+    dock->show();
+    dock->raise();
+    dock->setFocus();
+    return true;
+}
+
+void MainWindow::showStudioStage(bool welcome)
+{
+    if (!m_stageLayout || m_stageLayout->currentIndex() == (welcome ? 1 : 0))
+        return;
+    m_switchingStage = true;
+    m_stageLayout->setCurrentIndex(welcome ? 1 : 0);
+    m_switchingStage = false;
+}
+
+void MainWindow::beginNewProject()
+{
+    // O formulário de novo projeto vive no Player; sincronizar a casca faria
+    // a tela de boas-vindas reaparecer, então a sincronização é suspensa.
+    m_suppressWelcomeSync = true;
+    ui->actionNew->trigger();
+    m_suppressWelcomeSync = false;
+    showStudioStage(false);
+    if (m_shell)
+        m_shell->setWelcomeVisible(false);
+}
+
+QMenu *MainWindow::studioMenu(const QString &name) const
+{
+    if (name == QStringLiteral("menuFile"))
+        return ui->menuFile;
+    if (name == QStringLiteral("menuEdit"))
+        return ui->menuEdit;
+    if (name == QStringLiteral("menuView"))
+        return ui->menuView;
+    if (name == QStringLiteral("menuPlayer"))
+        return ui->menuPlayer;
+    if (name == QStringLiteral("menuSettings"))
+        return ui->menuSettings;
+    if (name == QStringLiteral("menuHelp"))
+        return ui->menuHelp;
+    return nullptr;
+}
+
+void MainWindow::hideStudioPanels()
+{
+    for (auto *dock : {static_cast<QDockWidget *>(m_filesDock),
+                       static_cast<QDockWidget *>(m_recentDock),
+                       static_cast<QDockWidget *>(m_playlistDock),
+                       static_cast<QDockWidget *>(m_filtersDock),
+                       static_cast<QDockWidget *>(m_propertiesDock),
+                       static_cast<QDockWidget *>(m_encodeDock),
+                       static_cast<QDockWidget *>(m_historyDock),
+                       static_cast<QDockWidget *>(m_jobsDock),
+                       static_cast<QDockWidget *>(m_elementsDock),
+                       static_cast<QDockWidget *>(m_notesDock),
+                       static_cast<QDockWidget *>(m_subtitlesDock)}) {
+        if (dock)
+            dock->hide();
+    }
 }
 
 void MainWindow::setupLayoutSwitcher()
@@ -3377,6 +3601,14 @@ void MainWindow::removeCustomProfiles(const QStringList &profiles,
 
 bool MainWindow::eventFilter(QObject *target, QEvent *event)
 {
+    // A tela de boas-vindas acompanha o formulário de projeto embutido no Player.
+    if (!m_switchingStage && !m_suppressWelcomeSync && m_shell && m_player
+        && m_player->projectWidget() && target == m_player->projectWidget()
+        && (event->type() == QEvent::Show || event->type() == QEvent::Hide)) {
+        const bool welcome = event->type() == QEvent::Show;
+        showStudioStage(welcome);
+        m_shell->setWelcomeVisible(welcome);
+    }
     if (event->type() == QEvent::DragEnter && target == MLT.videoWidget()) {
         dragEnterEvent(static_cast<QDragEnterEvent *>(event));
         return true;
@@ -4235,96 +4467,100 @@ void MainWindow::changeTheme(const QString &theme)
 #else
     if (mytheme == kThemeDark) {
         QApplication::setStyle(kStyleFusion);
-        // Vídeo Studio BR - tema "Modern Dark": azul-noite, roxo e ciano.
+        // Vídeo Studio BR - tema "Midnight Blue": preto profundo e azul.
         QPalette palette;
-        palette.setColor(QPalette::Window, QColor(14, 21, 38));        // #0e1526
-        palette.setColor(QPalette::WindowText, QColor(226, 232, 255)); // #e2e8ff
-        palette.setColor(QPalette::Base, QColor(11, 17, 31));          // #0b111f
-        palette.setColor(QPalette::AlternateBase, QColor(23, 19, 51)); // #171333
-        palette.setColor(QPalette::Highlight, QColor(106, 61, 245));   // #6a3df5
+        palette.setColor(QPalette::Window, QColor(5, 8, 15));          // #05080f
+        palette.setColor(QPalette::WindowText, QColor(220, 232, 247)); // #dce8f7
+        palette.setColor(QPalette::Base, QColor(4, 9, 17));            // #040911
+        palette.setColor(QPalette::AlternateBase, QColor(13, 23, 41)); // #0d1729
+        palette.setColor(QPalette::Highlight, QColor(47, 129, 247));   // #2f81f7
         palette.setColor(QPalette::HighlightedText, Qt::white);
-        palette.setColor(QPalette::ToolTipBase, QColor(36, 18, 80));   // #241250
-        palette.setColor(QPalette::ToolTipText, QColor(226, 232, 255));
-        palette.setColor(QPalette::Text, QColor(226, 232, 255));
-        palette.setColor(QPalette::BrightText, QColor(44, 236, 255));  // #2cecff
-        palette.setColor(QPalette::Button, QColor(24, 20, 52));        // #181434
-        palette.setColor(QPalette::ButtonText, QColor(226, 232, 255));
-        palette.setColor(QPalette::Link, QColor(44, 236, 255));
-        palette.setColor(QPalette::LinkVisited, QColor(160, 120, 255));
-        palette.setColor(QPalette::PlaceholderText, QColor(130, 140, 170));
-        palette.setColor(QPalette::Disabled, QPalette::Base, QColor(16, 20, 34));
-        palette.setColor(QPalette::Disabled, QPalette::Text, QColor(110, 118, 145));
-        palette.setColor(QPalette::Disabled, QPalette::ButtonText, QColor(110, 118, 145));
+        palette.setColor(QPalette::ToolTipBase, QColor(13, 27, 51)); // #0d1b33
+        palette.setColor(QPalette::ToolTipText, QColor(220, 232, 247));
+        palette.setColor(QPalette::Text, QColor(220, 232, 247));
+        palette.setColor(QPalette::BrightText, QColor(124, 192, 255)); // #7cc0ff
+        palette.setColor(QPalette::Button, QColor(10, 20, 37));        // #0a1425
+        palette.setColor(QPalette::ButtonText, QColor(220, 232, 247));
+        palette.setColor(QPalette::Link, QColor(124, 192, 255));
+        palette.setColor(QPalette::LinkVisited, QColor(79, 163, 255));
+        palette.setColor(QPalette::PlaceholderText, QColor(130, 150, 179));
+        palette.setColor(QPalette::Disabled, QPalette::Base, QColor(8, 14, 26));
+        palette.setColor(QPalette::Disabled, QPalette::Text, QColor(96, 112, 138));
+        palette.setColor(QPalette::Disabled, QPalette::ButtonText, QColor(96, 112, 138));
         palette.setColor(QPalette::Disabled, QPalette::Light, Qt::transparent);
         QApplication::setPalette(palette);
         qApp->setStyleSheet(QStringLiteral(
             // Janela, separadores e splitters
-            "QMainWindow::separator { background: #0e1526; width: 4px; height: 4px; }"
-            "QSplitter::handle { background: #2a2450; }"
-            // Abas arredondadas com acento roxo/ciano
-            "QTabWidget::pane { border: 1px solid #2a2450; border-radius: 8px; top: -1px; }"
-            "QTabBar::tab { background: #171333; color: #a9b2d6; padding: 6px 12px;"
-            " border: 1px solid #2a2450; }"
+            "QMainWindow::separator { background: #05080f; width: 4px; height: 4px; }"
+            "QSplitter::handle { background: #1b2b45; }"
+            // Abas arredondadas com acento azul
+            "QTabWidget::pane { border: 1px solid #1b2b45; border-radius: 8px; top: -1px; }"
+            "QTabBar::tab { background: #0d1729; color: #93a7c4; padding: 6px 12px;"
+            " border: 1px solid #1b2b45; }"
             "QTabBar::tab:top { border-bottom: none;"
             " border-top-left-radius: 8px; border-top-right-radius: 8px; }"
             "QTabBar::tab:bottom { border-top: none;"
             " border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }"
-            "QTabBar::tab:selected { background: #241250; color: #2cecff; }"
-            "QTabBar::tab:top:selected { border-top: 2px solid #6a3df5; }"
-            "QTabBar::tab:bottom:selected { border-bottom: 2px solid #6a3df5; }"
-            "QTabBar::tab:hover:!selected { background: #201a45; color: #e2e8ff; }"
+            "QTabBar::tab:selected { background: #0d1b33; color: #7cc0ff; }"
+            "QTabBar::tab:top:selected { border-top: 2px solid #2f81f7; }"
+            "QTabBar::tab:bottom:selected { border-bottom: 2px solid #2f81f7; }"
+            "QTabBar::tab:hover:!selected { background: #111f38; color: #dce8f7; }"
             // Docks e barras de ferramentas
             "QDockWidget::title { background: qlineargradient(x1:0, y1:0, x2:1, y2:0,"
-            " stop:0 #241250, stop:1 #0e1526); color: #e2e8ff; padding: 5px 8px;"
-            " border-bottom: 1px solid #6a3df5; }"
-            "QToolBar { background: #121026; border: none; border-bottom: 1px solid #2a2450;"
+            " stop:0 #0d1b33, stop:1 #05080f); color: #dce8f7; padding: 5px 8px;"
+            " border-bottom: 1px solid #2f81f7; }"
+            "QToolBar { background: #080e1b; border: none; border-bottom: 1px solid #1b2b45;"
             " spacing: 3px; padding: 2px; }"
-            "QToolBar::separator { background: #2a2450; width: 1px; margin: 3px 2px; }"
+            "QToolBar::separator { background: #1b2b45; width: 1px; margin: 3px 2px; }"
             // Botões
-            "QPushButton { background: #241250; color: #e2e8ff; border: 1px solid #4c3a9a;"
+            "QPushButton { background: #0d1b33; color: #dce8f7; border: 1px solid #2563c7;"
             " border-radius: 6px; padding: 5px 12px; }"
-            "QPushButton:hover { background: #6a3df5; border-color: #2cecff; }"
-            "QPushButton:pressed { background: #4a25b5; }"
-            "QPushButton:checked { background: #6a3df5; border-color: #2cecff; color: #fff; }"
+            "QPushButton:hover { background: #2f81f7; border-color: #7cc0ff; }"
+            "QPushButton:pressed { background: #1d5fcb; }"
+            "QPushButton:checked { background: #2f81f7; border-color: #7cc0ff; color: #fff; }"
             // Campos de entrada
             "QLineEdit, QTextEdit, QPlainTextEdit, QComboBox, QSpinBox, QDoubleSpinBox {"
-            " background: #0b111f; color: #e2e8ff; border: 1px solid #2a2450;"
-            " border-radius: 6px; padding: 4px 6px; selection-background-color: #6a3df5; }"
+            " background: #040911; color: #dce8f7; border: 1px solid #1b2b45;"
+            " border-radius: 6px; padding: 4px 6px; selection-background-color: #2f81f7; }"
             "QLineEdit:focus, QComboBox:focus, QSpinBox:focus, QDoubleSpinBox:focus {"
-            " border: 1px solid #2cecff; }"
+            " border: 1px solid #7cc0ff; }"
             "QComboBox::drop-down { border: none; width: 18px; }"
-            "QComboBox QAbstractItemView { background: #121026; color: #e2e8ff;"
-            " border: 1px solid #2a2450; border-radius: 6px;"
-            " selection-background-color: #6a3df5; }"
+            "QComboBox QAbstractItemView { background: #080e1b; color: #dce8f7;"
+            " border: 1px solid #1b2b45; border-radius: 6px;"
+            " selection-background-color: #2f81f7; }"
             // Menus
-            "QMenuBar { background: #121026; color: #e2e8ff; border-bottom: 1px solid #2a2450; }"
+            "QMenuBar { background: #080e1b; color: #dce8f7; border-bottom: 1px solid #1b2b45; }"
             "QMenuBar::item { background: transparent; padding: 5px 10px; border-radius: 5px; }"
-            "QMenuBar::item:selected { background: #6a3df5; color: #fff; }"
-            "QMenu { background: #121026; color: #e2e8ff; border: 1px solid #2a2450;"
+            "QMenuBar::item:selected { background: #2f81f7; color: #fff; }"
+            "QMenu { background: #080e1b; color: #dce8f7; border: 1px solid #1b2b45;"
             " border-radius: 8px; }"
             "QMenu::item { padding: 6px 24px; border-radius: 4px; }"
-            "QMenu::item:selected { background: #6a3df5; color: #fff; }"
-            "QMenu::separator { height: 1px; background: #2a2450; margin: 4px 8px; }"
+            "QMenu::item:selected { background: #2f81f7; color: #fff; }"
+            "QMenu::separator { height: 1px; background: #1b2b45; margin: 4px 8px; }"
             // Barras de rolagem
-            "QScrollBar:vertical { background: #0b111f; width: 12px; margin: 0; border-radius: 6px; }"
-            "QScrollBar::handle:vertical { background: #4c3a9a; border-radius: 6px; min-height: 24px; }"
-            "QScrollBar::handle:vertical:hover { background: #6a3df5; }"
-            "QScrollBar:horizontal { background: #0b111f; height: 12px; margin: 0; border-radius: 6px; }"
-            "QScrollBar::handle:horizontal { background: #4c3a9a; border-radius: 6px; min-width: 24px; }"
-            "QScrollBar::handle:horizontal:hover { background: #6a3df5; }"
+            "QScrollBar:vertical { background: #040911; width: 12px; margin: 0; border-radius: "
+            "6px; }"
+            "QScrollBar::handle:vertical { background: #2563c7; border-radius: 6px; min-height: "
+            "24px; }"
+            "QScrollBar::handle:vertical:hover { background: #2f81f7; }"
+            "QScrollBar:horizontal { background: #040911; height: 12px; margin: 0; border-radius: "
+            "6px; }"
+            "QScrollBar::handle:horizontal { background: #2563c7; border-radius: 6px; min-width: "
+            "24px; }"
+            "QScrollBar::handle:horizontal:hover { background: #2f81f7; }"
             "QScrollBar::add-line, QScrollBar::sub-line { width: 0; height: 0; }"
             // Cabeçalhos, tooltips, progresso e grupos
-            "QHeaderView::section { background: #171333; color: #b9c2e6; border: none;"
-            " border-bottom: 1px solid #6a3df5; padding: 5px; }"
-            "QToolTip { background: #241250; color: #e2e8ff; border: 1px solid #6a3df5;"
+            "QHeaderView::section { background: #0d1729; color: #a8bcd7; border: none;"
+            " border-bottom: 1px solid #2f81f7; padding: 5px; }"
+            "QToolTip { background: #0d1b33; color: #dce8f7; border: 1px solid #2f81f7;"
             " border-radius: 6px; padding: 4px; }"
-            "QProgressBar { background: #0b111f; border: 1px solid #2a2450; border-radius: 6px;"
-            " text-align: center; color: #e2e8ff; }"
+            "QProgressBar { background: #040911; border: 1px solid #1b2b45; border-radius: 6px;"
+            " text-align: center; color: #dce8f7; }"
             "QProgressBar::chunk { background: qlineargradient(x1:0, y1:0, x2:1, y2:0,"
-            " stop:0 #6a3df5, stop:1 #2cecff); border-radius: 5px; }"
-            "QGroupBox { border: 1px solid #2a2450; border-radius: 8px; margin-top: 12px; }"
+            " stop:0 #2f81f7, stop:1 #7cc0ff); border-radius: 5px; }"
+            "QGroupBox { border: 1px solid #1b2b45; border-radius: 8px; margin-top: 12px; }"
             "QGroupBox::title { subcontrol-origin: margin; left: 10px; padding: 0 4px;"
-            " color: #2cecff; }"));
+            " color: #7cc0ff; }"));
         QIcon::setThemeName(kThemeDark);
         ::qputenv("QT_QUICK_CONTROLS_CONF", ":/resources/qtquickcontrols2-dark.conf");
     } else if (mytheme == "light") {

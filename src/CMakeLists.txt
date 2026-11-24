@@ -139,6 +139,7 @@ add_executable(shotcut WIN32 MACOSX_BUNDLE
   resources.qrc
   scrubbar.cpp scrubbar.h
   settings.cpp settings.h
+  studioshell.cpp studioshell.h
   sharedframe.cpp sharedframe.h
   shotcut_mlt_properties.h
   transcoder.cpp transcoder.h
