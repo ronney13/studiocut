@@ -11,8 +11,8 @@ permissions:
 
 jobs:
   deb:
-    name: DEB + TGZ (Ubuntu 24.04)
-    runs-on: ubuntu-24.04
+    name: DEB + TGZ (Ubuntu 26.04)
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v4
       - name: Dependências
@@ -40,9 +40,9 @@ jobs:
             video-studio-br*.tar.gz
 
   rpm:
-    name: RPM (Fedora 41)
-    runs-on: ubuntu-24.04
-    container: fedora:41
+    name: RPM (Fedora 44)
+    runs-on: ubuntu-26.04
+    container: fedora:44
     steps:
       - name: Dependências
         run: |
@@ -67,8 +67,8 @@ jobs:
           path: video-studio-br*.rpm
 
   appimage:
-    name: AppImage (Ubuntu 24.04)
-    runs-on: ubuntu-24.04
+    name: AppImage (Ubuntu 26.04)
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v4
       - name: Dependências
@@ -106,8 +106,8 @@ jobs:
           path: '*.AppImage'
 
   flatpak:
-    name: Flatpak (experimental)
-    runs-on: ubuntu-24.04
+    name: Flatpak (Ubuntu 26.04, experimental)
+    runs-on: ubuntu-26.04
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
