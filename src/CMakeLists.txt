@@ -281,7 +281,7 @@ add_custom_target(OTHER_FILES
   ../scripts/staple.sh
 )
 
-set_target_properties(shotcut PROPERTIES OUTPUT_NAME "studiocut")
+set_target_properties(shotcut PROPERTIES OUTPUT_NAME "video-studio-br")
 
 # Compile HDR gain shader (used by HdrPreview.qml ShaderEffect)
 find_program(QSB_EXECUTABLE qsb HINTS
@@ -380,7 +380,7 @@ if(APPLE)
   target_sources(shotcut PRIVATE macos.mm macos.h
     widgets/metalvideowidget.h widgets/metalvideowidget.mm)
   set_target_properties(shotcut PROPERTIES
-    OUTPUT_NAME "StudioCut"
+    OUTPUT_NAME "Vídeo Studio BR"
     MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/packaging/macos/Info.plist.in)
   find_library(FOUNDATION Foundation)
   find_library(COCOA Cocoa)
@@ -421,18 +421,20 @@ if(UNIX AND NOT APPLE)
 
   string(REPLACE . - SHOTCUT_DATE  ${SHOTCUT_VERSION})
   string(PREPEND SHOTCUT_DATE "20")
-  configure_file(${CMAKE_SOURCE_DIR}/packaging/linux/org.shotcut.Shotcut.metainfo.xml.in
-    ${CMAKE_BINARY_DIR}/packaging/linux/org.shotcut.Shotcut.metainfo.xml)
-  install(FILES ${CMAKE_BINARY_DIR}/packaging/linux/org.shotcut.Shotcut.metainfo.xml
+  configure_file(${CMAKE_SOURCE_DIR}/packaging/linux/org.videostudiobr.VideoStudioBR.metainfo.xml.in
+    ${CMAKE_BINARY_DIR}/packaging/linux/org.videostudiobr.VideoStudioBR.metainfo.xml)
+  install(FILES ${CMAKE_BINARY_DIR}/packaging/linux/org.videostudiobr.VideoStudioBR.metainfo.xml
     DESTINATION ${CMAKE_INSTALL_DATADIR}/metainfo/)
-  install(FILES ${CMAKE_SOURCE_DIR}/packaging/linux/org.shotcut.Shotcut.desktop
-    DESTINATION ${CMAKE_INSTALL_DATADIR}/applications/)
+  install(FILES ${CMAKE_SOURCE_DIR}/packaging/linux/video-studio-br.desktop
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/applications/
+    RENAME org.videostudiobr.VideoStudioBR.desktop)
   install(FILES ${CMAKE_SOURCE_DIR}/packaging/linux/org.shotcut.Shotcut.xml
-    DESTINATION ${CMAKE_INSTALL_DATADIR}/mime/packages/)
-  install(FILES ${CMAKE_SOURCE_DIR}/packaging/linux/icons/64x64/org.shotcut.Shotcut.png
-    DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/64x64/apps/)
-  install(FILES ${CMAKE_SOURCE_DIR}/packaging/linux/icons/128x128/org.shotcut.Shotcut.png
-    DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/128x128/apps/)
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/mime/packages/
+    RENAME org.videostudiobr.VideoStudioBR.xml)
+  install(FILES ${CMAKE_SOURCE_DIR}/icons/studiocut-logo-64.svg
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps/
+    RENAME org.videostudiobr.VideoStudioBR.svg)
   install(FILES ${CMAKE_SOURCE_DIR}/packaging/linux/shotcut.1
-    DESTINATION ${CMAKE_INSTALL_DATADIR}/man/man1/)
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/man/man1/
+    RENAME video-studio-br.1)
 endif()

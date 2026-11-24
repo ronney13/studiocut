@@ -3116,7 +3116,7 @@ void MainWindow::updateWindowTitle()
 #endif
 }
 
-void MainWindow::on_actionAbout_StudioCut_triggered()
+void MainWindow::on_actionAbout_VideoStudioBR_triggered()
 {
     const auto copyright = QStringLiteral(
         "Copyright &copy; 2011-2026 <a href=\"https://www.meltytech.com/\">Meltytech</a>, LLC");
@@ -3127,32 +3127,35 @@ void MainWindow::on_actionAbout_StudioCut_triggered()
         this,
         tr("About %1").arg(qApp->applicationName()),
         QStringLiteral(
-            "<h1>StudioCut version %2</h1>"
-            "<p><a href=\"%3\">%1</a> is a free, open source, cross platform video editor based on <a href=\"https://www.shotcut.org/\">Shotcut</a>.</p>"
+            "<h1>Vídeo Studio BR versão %2</h1>"
+            "<p><a href=\"%3\">%1</a> é um editor de vídeo livre, de código aberto e "
+            "multiplataforma, baseado no <a href=\"https://www.shotcut.org/\">Shotcut</a>.</p>"
             "<small><p>%4</p>"
-            "<p>Licensed under the %5</p>"
-            "<p>This program proudly uses the following projects:<ul>"
-            "<li><a href=\"https://www.qt.io/\">Qt</a> application and UI framework</li>"
-            "<li><a href=\"https://www.mltframework.org/\">MLT</a> multimedia authoring "
-            "framework</li>"
-            "<li><a href=\"https://www.ffmpeg.org/\">FFmpeg</a> multimedia format and codec "
-            "libraries</li>"
-            "<li><a href=\"https://www.videolan.org/developers/x264.html\">x264</a> H.264 "
-            "encoder</li>"
-            "<li><a href=\"https://www.videolan.org/projects/dav1d.html\">dav1d</a> AV1 "
-            "decoder</li>"
-            "<li><a href=\"https://gitlab.com/AOMediaCodec/SVT-AV1\">SVT-AV1</a> AV1 encoder</li>"
-            "<li><a href=\"https://opus-codec.org/\">Opus</a> audio codec</li>"
-            "<li><a href=\"https://www.dyne.org/software/frei0r/\">Frei0r</a> video plugins</li>"
-            "<li><a href=\"https://www.ladspa.org/\">LADSPA</a> audio plugins</li>"
-            "<li><a href=\"https://glaxnimate.org/\">Glaxnimate</a> vector drawing &amp; animation "
-            "program</li>"
+            "<p>Licenciado sob a %5</p>"
+            "<p>Este programa utiliza com orgulho os seguintes projetos:<ul>"
+            "<li><a href=\"https://www.qt.io/\">Qt</a> - framework de aplicação e interface</li>"
+            "<li><a href=\"https://www.mltframework.org/\">MLT</a> - framework de autoria "
+            "multimídia</li>"
+            "<li><a href=\"https://www.ffmpeg.org/\">FFmpeg</a> - bibliotecas de formatos e "
+            "codecs</li>"
+            "<li><a href=\"https://www.videolan.org/developers/x264.html\">x264</a> - "
+            "codificador H.264</li>"
+            "<li><a href=\"https://www.videolan.org/projects/dav1d.html\">dav1d</a> - "
+            "decodificador AV1</li>"
+            "<li><a href=\"https://gitlab.com/AOMediaCodec/SVT-AV1\">SVT-AV1</a> - codificador "
+            "AV1</li>"
+            "<li><a href=\"https://opus-codec.org/\">Opus</a> - codec de áudio</li>"
+            "<li><a href=\"https://www.dyne.org/software/frei0r/\">Frei0r</a> - plugins de "
+            "vídeo</li>"
+            "<li><a href=\"https://www.ladspa.org/\">LADSPA</a> - plugins de áudio</li>"
+            "<li><a href=\"https://glaxnimate.org/\">Glaxnimate</a> - desenho e animação "
+            "vetorial</li>"
             "</ul></p>"
-            "<p>The source code used to build this program can be downloaded from "
+            "<p>O código-fonte usado para compilar este programa pode ser baixado em "
             "<a href=\"%3\">%3</a>.</p>"
-            "This program is distributed in the hope that it will be useful, "
-            "but WITHOUT ANY WARRANTY; without even the implied warranty of "
-            "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</small>")
+            "Este programa é distribuído na esperança de que seja útil, "
+            "mas SEM QUALQUER GARANTIA; sem mesmo a garantia implícita de "
+            "COMERCIALIZAÇÃO ou ADEQUAÇÃO A UM DETERMINADO FIM.</small>")
             .arg(qApp->applicationName(), qApp->applicationVersion(), url, copyright, license));
 }
 
@@ -4232,40 +4235,96 @@ void MainWindow::changeTheme(const QString &theme)
 #else
     if (mytheme == kThemeDark) {
         QApplication::setStyle(kStyleFusion);
+        // Vídeo Studio BR - tema "Modern Dark": azul-noite, roxo e ciano.
         QPalette palette;
-        palette.setColor(QPalette::Window, QColor(50, 50, 50));
-        palette.setColor(QPalette::WindowText, QColor(220, 220, 220));
-        palette.setColor(QPalette::Base, QColor(30, 30, 30));
-        palette.setColor(QPalette::AlternateBase, QColor(40, 40, 40));
-        palette.setColor(QPalette::Highlight, QColor(23, 92, 118));
+        palette.setColor(QPalette::Window, QColor(14, 21, 38));        // #0e1526
+        palette.setColor(QPalette::WindowText, QColor(226, 232, 255)); // #e2e8ff
+        palette.setColor(QPalette::Base, QColor(11, 17, 31));          // #0b111f
+        palette.setColor(QPalette::AlternateBase, QColor(23, 19, 51)); // #171333
+        palette.setColor(QPalette::Highlight, QColor(106, 61, 245));   // #6a3df5
         palette.setColor(QPalette::HighlightedText, Qt::white);
-        palette.setColor(QPalette::ToolTipBase, palette.color(QPalette::Highlight));
-        palette.setColor(QPalette::ToolTipText, palette.color(QPalette::WindowText));
-        palette.setColor(QPalette::Text, palette.color(QPalette::WindowText));
-        palette.setColor(QPalette::BrightText, Qt::red);
-        palette.setColor(QPalette::Button, palette.color(QPalette::Window));
-        palette.setColor(QPalette::ButtonText, palette.color(QPalette::WindowText));
-        palette.setColor(QPalette::Link, palette.color(QPalette::Highlight).lighter());
-        palette.setColor(QPalette::LinkVisited, palette.color(QPalette::Highlight));
-        palette.setColor(QPalette::PlaceholderText, palette.color(QPalette::Text).darker());
-        palette.setColor(QPalette::Disabled, QPalette::Base, palette.color(QPalette::Base).darker());
-        palette.setColor(QPalette::Disabled, QPalette::Text, palette.color(QPalette::Text).darker());
-        palette.setColor(QPalette::Disabled, QPalette::ButtonText, Qt::darkGray);
+        palette.setColor(QPalette::ToolTipBase, QColor(36, 18, 80));   // #241250
+        palette.setColor(QPalette::ToolTipText, QColor(226, 232, 255));
+        palette.setColor(QPalette::Text, QColor(226, 232, 255));
+        palette.setColor(QPalette::BrightText, QColor(44, 236, 255));  // #2cecff
+        palette.setColor(QPalette::Button, QColor(24, 20, 52));        // #181434
+        palette.setColor(QPalette::ButtonText, QColor(226, 232, 255));
+        palette.setColor(QPalette::Link, QColor(44, 236, 255));
+        palette.setColor(QPalette::LinkVisited, QColor(160, 120, 255));
+        palette.setColor(QPalette::PlaceholderText, QColor(130, 140, 170));
+        palette.setColor(QPalette::Disabled, QPalette::Base, QColor(16, 20, 34));
+        palette.setColor(QPalette::Disabled, QPalette::Text, QColor(110, 118, 145));
+        palette.setColor(QPalette::Disabled, QPalette::ButtonText, QColor(110, 118, 145));
         palette.setColor(QPalette::Disabled, QPalette::Light, Qt::transparent);
         QApplication::setPalette(palette);
         qApp->setStyleSheet(QStringLiteral(
-            "QTabBar::tab { background: #232323; color: #aaaaaa; padding: 4px 8px;"
-            " border: 1px solid #1a1a1a; }"
+            // Janela, separadores e splitters
+            "QMainWindow::separator { background: #0e1526; width: 4px; height: 4px; }"
+            "QSplitter::handle { background: #2a2450; }"
+            // Abas arredondadas com acento roxo/ciano
+            "QTabWidget::pane { border: 1px solid #2a2450; border-radius: 8px; top: -1px; }"
+            "QTabBar::tab { background: #171333; color: #a9b2d6; padding: 6px 12px;"
+            " border: 1px solid #2a2450; }"
             "QTabBar::tab:top { border-bottom: none;"
-            " border-top-left-radius: 4px; border-top-right-radius: 4px; }"
+            " border-top-left-radius: 8px; border-top-right-radius: 8px; }"
             "QTabBar::tab:bottom { border-top: none;"
-            " border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; }"
-            "QTabBar::tab:selected { background: #323232; color: #dcdcdc; }"
-            "QTabBar::tab:top:selected { background: #404040; border-top: 2px solid #175c76; }"
-            "QTabBar::tab:bottom:selected { border-bottom: 2px solid #175c76; }"
-            "QTabBar::tab:hover:!selected { background: #2a2a2a; }"
-            "QTabBar::tab:top:!selected { margin-top: 2px; }"
-            "QTabBar::tab:bottom:!selected { margin-bottom: 2px; }"));
+            " border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }"
+            "QTabBar::tab:selected { background: #241250; color: #2cecff; }"
+            "QTabBar::tab:top:selected { border-top: 2px solid #6a3df5; }"
+            "QTabBar::tab:bottom:selected { border-bottom: 2px solid #6a3df5; }"
+            "QTabBar::tab:hover:!selected { background: #201a45; color: #e2e8ff; }"
+            // Docks e barras de ferramentas
+            "QDockWidget::title { background: qlineargradient(x1:0, y1:0, x2:1, y2:0,"
+            " stop:0 #241250, stop:1 #0e1526); color: #e2e8ff; padding: 5px 8px;"
+            " border-bottom: 1px solid #6a3df5; }"
+            "QToolBar { background: #121026; border: none; border-bottom: 1px solid #2a2450;"
+            " spacing: 3px; padding: 2px; }"
+            "QToolBar::separator { background: #2a2450; width: 1px; margin: 3px 2px; }"
+            // Botões
+            "QPushButton { background: #241250; color: #e2e8ff; border: 1px solid #4c3a9a;"
+            " border-radius: 6px; padding: 5px 12px; }"
+            "QPushButton:hover { background: #6a3df5; border-color: #2cecff; }"
+            "QPushButton:pressed { background: #4a25b5; }"
+            "QPushButton:checked { background: #6a3df5; border-color: #2cecff; color: #fff; }"
+            // Campos de entrada
+            "QLineEdit, QTextEdit, QPlainTextEdit, QComboBox, QSpinBox, QDoubleSpinBox {"
+            " background: #0b111f; color: #e2e8ff; border: 1px solid #2a2450;"
+            " border-radius: 6px; padding: 4px 6px; selection-background-color: #6a3df5; }"
+            "QLineEdit:focus, QComboBox:focus, QSpinBox:focus, QDoubleSpinBox:focus {"
+            " border: 1px solid #2cecff; }"
+            "QComboBox::drop-down { border: none; width: 18px; }"
+            "QComboBox QAbstractItemView { background: #121026; color: #e2e8ff;"
+            " border: 1px solid #2a2450; border-radius: 6px;"
+            " selection-background-color: #6a3df5; }"
+            // Menus
+            "QMenuBar { background: #121026; color: #e2e8ff; border-bottom: 1px solid #2a2450; }"
+            "QMenuBar::item { background: transparent; padding: 5px 10px; border-radius: 5px; }"
+            "QMenuBar::item:selected { background: #6a3df5; color: #fff; }"
+            "QMenu { background: #121026; color: #e2e8ff; border: 1px solid #2a2450;"
+            " border-radius: 8px; }"
+            "QMenu::item { padding: 6px 24px; border-radius: 4px; }"
+            "QMenu::item:selected { background: #6a3df5; color: #fff; }"
+            "QMenu::separator { height: 1px; background: #2a2450; margin: 4px 8px; }"
+            // Barras de rolagem
+            "QScrollBar:vertical { background: #0b111f; width: 12px; margin: 0; border-radius: 6px; }"
+            "QScrollBar::handle:vertical { background: #4c3a9a; border-radius: 6px; min-height: 24px; }"
+            "QScrollBar::handle:vertical:hover { background: #6a3df5; }"
+            "QScrollBar:horizontal { background: #0b111f; height: 12px; margin: 0; border-radius: 6px; }"
+            "QScrollBar::handle:horizontal { background: #4c3a9a; border-radius: 6px; min-width: 24px; }"
+            "QScrollBar::handle:horizontal:hover { background: #6a3df5; }"
+            "QScrollBar::add-line, QScrollBar::sub-line { width: 0; height: 0; }"
+            // Cabeçalhos, tooltips, progresso e grupos
+            "QHeaderView::section { background: #171333; color: #b9c2e6; border: none;"
+            " border-bottom: 1px solid #6a3df5; padding: 5px; }"
+            "QToolTip { background: #241250; color: #e2e8ff; border: 1px solid #6a3df5;"
+            " border-radius: 6px; padding: 4px; }"
+            "QProgressBar { background: #0b111f; border: 1px solid #2a2450; border-radius: 6px;"
+            " text-align: center; color: #e2e8ff; }"
+            "QProgressBar::chunk { background: qlineargradient(x1:0, y1:0, x2:1, y2:0,"
+            " stop:0 #6a3df5, stop:1 #2cecff); border-radius: 5px; }"
+            "QGroupBox { border: 1px solid #2a2450; border-radius: 8px; margin-top: 12px; }"
+            "QGroupBox::title { subcontrol-origin: margin; left: 10px; padding: 0 4px;"
+            " color: #2cecff; }"));
         QIcon::setThemeName(kThemeDark);
         ::qputenv("QT_QUICK_CONTROLS_CONF", ":/resources/qtquickcontrols2-dark.conf");
     } else if (mytheme == "light") {

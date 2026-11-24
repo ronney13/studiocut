@@ -171,7 +171,9 @@ void ShotcutSettings::log()
 
 QString ShotcutSettings::language() const
 {
-    QString language = settings.value("language", QLocale().name()).toString();
+    // Vídeo Studio BR: português do Brasil é o idioma padrão. Uma escolha explícita
+    // feita pelo usuário em Settings->Language continua sendo respeitada.
+    QString language = settings.value("language", QStringLiteral("pt_BR")).toString();
     if (language == "en")
         language = "en_US";
     return language;

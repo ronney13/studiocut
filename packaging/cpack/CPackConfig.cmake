@@ -1,0 +1,32 @@
+# Configuração CPack para Vídeo Studio BR (DEB / RPM / TGZ).
+set(CPACK_PACKAGE_NAME "video-studio-br")
+set(CPACK_PACKAGE_VENDOR "Vídeo Studio BR")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Editor de vídeo livre baseado no Shotcut")
+set(CPACK_PACKAGE_DESCRIPTION "Vídeo Studio BR - editor de vídeo Qt6/MLT em português do Brasil, derivado do Shotcut (GPLv3).")
+set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
+set(CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/ronney13/studiocut")
+set(CPACK_PACKAGE_CONTACT "ronney13@users.noreply.github.com")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "${CPACK_PACKAGE_NAME}")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING")
+set(CPACK_PACKAGE_EXECUTABLES "video-studio-br;Vídeo Studio BR")
+
+if(NOT DEFINED CPACK_GENERATOR)
+  set(CPACK_GENERATOR "TGZ;DEB;RPM")
+endif()
+
+set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
+set(CPACK_DEBIAN_PACKAGE_SECTION "video")
+set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "${CPACK_PACKAGE_HOMEPAGE_URL}")
+
+set(CPACK_RPM_FILE_NAME RPM-DEFAULT)
+set(CPACK_RPM_PACKAGE_LICENSE "GPL-3.0-only")
+set(CPACK_RPM_PACKAGE_GROUP "Applications/Multimedia")
+set(CPACK_RPM_PACKAGE_URL "${CPACK_PACKAGE_HOMEPAGE_URL}")
+set(CPACK_RPM_PACKAGE_REQUIRES "qt6-qtbase, mlt")
+set(CPACK_RPM_PACKAGE_AUTOREQPROV "1")
+
+set(CPACK_THREADS 0)
+set(CPACK_ARCHIVE_FILE_NAME "video-studio-br-linux-x86_64")
+include(CPack)

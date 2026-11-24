@@ -177,7 +177,7 @@ public:
 #ifdef Q_OS_WIN
 #include <winbase.h>
         SetDllDirectoryA(appPath.toLocal8Bit());
-        CreateMutexA(NULL, FALSE, "StudioCut Running Mutex");
+        CreateMutexA(NULL, FALSE, "Video Studio BR Running Mutex");
 #else
         dir.cdUp();
 #endif
@@ -189,14 +189,14 @@ public:
         dir.cd("qt6");
 #endif
         addLibraryPath(dir.absolutePath());
-        setOrganizationName("StudioCut");
+        setOrganizationName("Vídeo Studio BR");
 #if defined(Q_OS_UNIX) && !defined(Q_OS_MAC)
-        setOrganizationDomain("studiocut.local");
-        setDesktopFileName("org.studiocut.StudioCut");
+        setOrganizationDomain("video-studio-br.local");
+        setDesktopFileName("org.videostudiobr.VideoStudioBR");
 #else
-        setOrganizationDomain("studiocut.local");
+        setOrganizationDomain("video-studio-br.local");
 #endif
-        setApplicationName("StudioCut");
+        setApplicationName("Vídeo Studio BR");
         setApplicationVersion(SHOTCUT_VERSION);
 
         // Process command line options.
@@ -206,7 +206,8 @@ public:
 #ifndef Q_OS_WIN
         QCommandLineOption fullscreenOption(
             "fullscreen",
-            QCoreApplication::translate("main", "Fill the screen with the StudioCut window."));
+            QCoreApplication::translate("main",
+                                        "Fill the screen with the Vídeo Studio BR window."));
         parser.addOption(fullscreenOption);
 #endif
         QCommandLineOption noupgradeOption(
@@ -215,7 +216,7 @@ public:
         QCommandLineOption
             glaxnimateOption("glaxnimate",
                              QCoreApplication::translate("main",
-                                                         "Run Glaxnimate instead of Shotcut."));
+                                                         "Run Glaxnimate instead of Vídeo Studio BR."));
         parser.addOption(glaxnimateOption);
         QCommandLineOption gpuOption("gpu",
                                      QCoreApplication::translate("main", "Use GPU processing."));

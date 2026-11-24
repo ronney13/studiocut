@@ -268,7 +268,7 @@ public slots:
 
 private slots:
     void showUpgradePrompt();
-    void on_actionAbout_StudioCut_triggered();
+    void on_actionAbout_VideoStudioBR_triggered();
     void on_actionOpenOther_triggered();
     void onProducerChanged();
     bool on_actionSave_As_triggered();

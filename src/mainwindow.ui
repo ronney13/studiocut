@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>StudioCut</string>
+   <string>Vídeo Studio BR</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../icons/resources.qrc">
@@ -142,7 +142,7 @@
     <addaction name="actionTutorials"/>
     <addaction name="actionForum"/>
     <addaction name="separator"/>
-    <addaction name="actionAbout_StudioCut"/>
+    <addaction name="actionAbout_VideoStudioBR"/>
     <addaction name="actionAbout_Qt"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
@@ -419,9 +419,9 @@
     <string notr="true">Ctrl+Q</string>
    </property>
   </action>
-  <action name="actionAbout_StudioCut">
+  <action name="actionAbout_VideoStudioBR">
    <property name="text">
-    <string>&amp;About StudioCut</string>
+    <string>&amp;About Vídeo Studio BR</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::AboutRole</enum>

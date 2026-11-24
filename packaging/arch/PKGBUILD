@@ -1,0 +1,24 @@
+# PKGBUILD para Arch Linux / AUR: Vídeo Studio BR
+pkgname=video-studio-br
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="Editor de vídeo livre baseado no Shotcut, em português do Brasil"
+arch=('x86_64')
+url="https://github.com/ronney13/studiocut"
+license=('GPL3')
+depends=('qt6-base' 'qt6-declarative' 'mlt' 'ffmpeg')
+source=("video-studio-br-linux-x86_64.tar.xz")
+sha256sums=('SKIP')
+
+package() {
+  mkdir -p "$pkgdir/opt/$pkgname"
+  cp -a "$srcdir/video-studio-br/." "$pkgdir/opt/$pkgname/"
+  install -Dm755 /dev/stdin "$pkgdir/usr/bin/video-studio-br" <<EOF
+#!/bin/sh
+exec /opt/$pkgname/video-studio-br "\$@"
+EOF
+  install -Dm644 "$pkgdir/opt/$pkgname/packaging/linux/video-studio-br.desktop" \
+    "$pkgdir/usr/share/applications/org.videostudiobr.VideoStudioBR.desktop"
+  install -Dm644 "$pkgdir/opt/$pkgname/icons/studiocut-logo-64.svg" \
+    "$pkgdir/usr/share/icons/hicolor/scalable/apps/org.videostudiobr.VideoStudioBR.svg"
+}

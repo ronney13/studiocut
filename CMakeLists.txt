@@ -12,8 +12,8 @@ endif()
 
 project(shotcut
   VERSION ${SHOTCUT_VERSION}
-  DESCRIPTION "StudioCut - cross-platform (Qt), open-source (GPLv3) video editor based on Shotcut"
-  HOMEPAGE_URL "https://github.com/mltframework/shotcut"
+  DESCRIPTION "Vídeo Studio BR - cross-platform (Qt), open-source (GPLv3) video editor based on Shotcut"
+  HOMEPAGE_URL "https://github.com/ronney13/studiocut"
   LANGUAGES CXX
 )
 
@@ -29,6 +29,11 @@ if (UNIX AND NOT APPLE)
 endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+# Vídeo Studio BR: pacotes Linux (DEB/RPM/TGZ) via CPack.
+if(UNIX AND NOT APPLE)
+  include(packaging/cpack/CPackConfig.cmake)
+endif()
 
 include(FeatureSummary)
 

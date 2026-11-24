@@ -69,4 +69,9 @@ if(UNIX AND NOT APPLE)
   include(GNUInstallDirs)
   install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/ DESTINATION ${CMAKE_INSTALL_DATADIR}/shotcut/translations
     FILES_MATCHING PATTERN "*.qm" PATTERN CMakeFiles EXCLUDE)
+elseif(WIN32)
+  # Vídeo Studio BR: no Windows os .qm precisam estar em share/translations
+  # porque é lá que Application() procura os arquivos de tradução.
+  install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/ DESTINATION share/translations
+    FILES_MATCHING PATTERN "*.qm" PATTERN CMakeFiles EXCLUDE)
 endif()

@@ -1,0 +1,33 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:bal="http://wixtoolset.org/schemas/v4/wxs/bal">
+  <?define BundleVersion = "1.0.0.0" ?>
+  <?define BundleUpgradeCode = "2957C58C-9B00-4BD7-8A82-86ABC077F6CC" ?>
+  <?ifndef MsiPath ?>
+  <?define MsiPath = "video-studio-br.msi" ?>
+  <?endif?>
+
+  <Bundle Name="Vídeo Studio BR"
+          Version="$(BundleVersion)"
+          Manufacturer="Vídeo Studio BR"
+          UpgradeCode="$(BundleUpgradeCode)"
+          IconSourceFile="..\studiocut-logo-64.ico"
+          AboutUrl="https://github.com/ronney13/studiocut"
+          HelpUrl="https://github.com/ronney13/studiocut"
+          UpdateUrl="https://github.com/ronney13/studiocut/releases">
+    <BootstrapperApplication>
+      <bal:WixStandardBootstrapperApplication
+          LicenseFile="License.rtf"
+          LogoFile="..\studiocut-logo-64.ico"
+          Theme="rtfLicense"
+          SuppressOptionsUI="yes"
+          ShowVersion="yes" />
+    </BootstrapperApplication>
+    <Chain>
+      <MsiPackage Id="MainPackage"
+                  SourceFile="$(MsiPath)"
+                  DisplayName="Vídeo Studio BR"
+                  ForcePerMachine="yes"
+                  Vital="yes" />
+    </Chain>
+  </Bundle>
+</Wix>

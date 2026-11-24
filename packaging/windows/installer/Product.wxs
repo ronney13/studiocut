@@ -1,0 +1,72 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+  <?define ProductVersion = "1.0.0.0" ?>
+  <?define UpgradeCode = "A056EFAB-2035-4CDB-8AA9-36C87D29E8E0" ?>
+
+  <Package Name="Vídeo Studio BR"
+           Language="1046"
+           Version="$(ProductVersion)"
+           Manufacturer="Vídeo Studio BR"
+           UpgradeCode="$(UpgradeCode)"
+           InstallerVersion="200"
+           Compressed="yes"
+           Scope="perMachine">
+
+    <SummaryInformation Description="Vídeo Studio BR - editor de vídeo baseado no Shotcut"
+                        Comments="Derivado do Shotcut - Meltytech, LLC - GPLv3" />
+
+    <MajorUpgrade DowngradeErrorMessage="Já existe uma versão mais recente do Vídeo Studio BR instalada." />
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
+
+    <Property Id="ARPPRODUCTICON" Value="AppIcon" />
+    <Property Id="ARPHELPLINK" Value="https://github.com/ronney13/studiocut" />
+    <Icon Id="AppIcon" SourceFile="..\studiocut-logo-64.ico" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="Vídeo Studio BR" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Component Id="StartMenuShortcut" Guid="DEBFC7F0-6C0A-4990-9CDA-3BB45F95BD4A">
+        <Shortcut Id="ShortcutStartMenu"
+                  Name="Vídeo Studio BR"
+                  Description="Editor de vídeo Vídeo Studio BR"
+                  Target="[INSTALLFOLDER]video-studio-br.exe"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon="AppIcon" />
+        <RemoveFolder Id="RemoveStartMenuFolder" On="uninstall" />
+        <RegistryValue Root="HKCU"
+                       Key="Software\VideoStudioBR\Video Studio BR"
+                       Name="startMenuShortcut"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes" />
+      </Component>
+    </StandardDirectory>
+
+    <StandardDirectory Id="DesktopFolder">
+      <Component Id="DesktopShortcut" Guid="*">
+        <Shortcut Id="ShortcutDesktop"
+                  Name="Vídeo Studio BR"
+                  Target="[INSTALLFOLDER]video-studio-br.exe"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon="AppIcon" />
+        <RegistryValue Root="HKCU"
+                       Key="Software\VideoStudioBR\Video Studio BR"
+                       Name="desktopShortcut"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes" />
+      </Component>
+    </StandardDirectory>
+
+    <Feature Id="MainFeature" Title="Vídeo Studio BR" Level="1" ConfigurableDirectory="INSTALLFOLDER">
+      <ComponentGroupRef Id="ApplicationFiles" />
+      <ComponentRef Id="StartMenuShortcut" />
+      <ComponentRef Id="DesktopShortcut" />
+    </Feature>
+
+    <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+  </Package>
+</Wix>

@@ -1,22 +1,32 @@
-# Implanta as dependencias de runtime na pasta de instalacao do StudioCut.
+# Implanta as dependencias de runtime na pasta de instalacao do Video Studio BR.
 # Uso: powershell -NoProfile -ExecutionPolicy Bypass -File deploy-runtime.ps1
 $ErrorActionPreference = 'Stop'
 
-$root = 'C:\Users\ronne\shotcut'
+$root = 'C:\Users\ronne\video-studio-br'
 $ucrtBin = 'C:\Users\ronne\msys64\ucrt64\bin'
 $installDir = Join-Path $root 'install\msys2-local-debug'
 $buildDir = Join-Path $root 'build\msys2-local-debug'
+$exeName = 'video-studio-br.exe'
 
 $env:Path = "$ucrtBin;$installDir;$env:Path"
 $env:QSG_RHI_BACKEND = 'd3d11'
 
-if (-not (Test-Path (Join-Path $installDir 'studiocut.exe'))) {
-    throw "studiocut.exe nao encontrado em $installDir"
+if (-not (Test-Path (Join-Path $installDir $exeName))) {
+    throw "$exeName nao encontrado em $installDir"
 }
 
 Write-Host '== windeployqt =='
-& (Join-Path $ucrtBin 'windeployqt.exe') --release (Join-Path $installDir 'studiocut.exe') | Out-Null
+& (Join-Path $ucrtBin 'windeployqt.exe') --release (Join-Path $installDir $exeName) | Out-Null
 if ($LASTEXITCODE -ne 0) { throw 'windeployqt falhou' }
+
+Write-Host '== traducoes (pt-BR e demais idiomas) =='
+$qmSource = Join-Path $buildDir 'translations'
+$qmDest = Join-Path $installDir 'share\translations'
+New-Item -ItemType Directory -Path $qmDest -Force | Out-Null
+Copy-Item (Join-Path $qmSource '*.qm') $qmDest -Force
+if (-not (Test-Path (Join-Path $qmDest 'shotcut_pt_BR.qm'))) {
+    throw 'shotcut_pt_BR.qm nao foi copiado'
+}
 
 Write-Host '== bibliotecas auxiliares =='
 Copy-Item (Join-Path $buildDir 'CuteLogger\libCuteLogger.dll') $installDir -Force
@@ -40,4 +50,4 @@ foreach ($n in $names) {
 
 Write-Host "PRONTO: $installDir"
 Write-Host 'Para executar:'
-Write-Host "  & '$installDir\studiocut.exe'"
+Write-Host "  & '$installDir\$exeName'"
