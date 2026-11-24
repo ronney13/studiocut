@@ -82,13 +82,15 @@ jobs:
             libmlt-dev libmlt++-dev libfftw3-dev frei0r-plugins-dev libsdl2-dev \
             libx11-dev libdbus-1-dev libgl1-mesa-dev libxkbcommon-dev \
             libvulkan-dev libavformat-dev libavcodec-dev libavutil-dev \
-            libswscale-dev libswresample-dev desktop-file-utils
+            libswscale-dev libswresample-dev desktop-file-utils libfuse2t64
       - name: Compilar e montar AppDir
         run: |
           cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_INSTALL_PREFIX="$PWD/AppDir/usr" -DEXTERNAL_LAUNCHERS=ON
           cmake --build build --parallel 2
           cmake --install build
+          # O CuteLogger é instalado em lib/x86_64-linux-gnu; linuxdeploy procura em usr/lib.
+          cp AppDir/usr/lib/x86_64-linux-gnu/libCuteLogger.so AppDir/usr/lib/
           cp AppDir/usr/share/applications/org.videostudiobr.VideoStudioBR.desktop AppDir/video-studio-br.desktop
           sed -i 's|^Exec=.*|Exec=video-studio-br|' AppDir/video-studio-br.desktop
           cp icons/studiocut-logo-64.svg AppDir/org.videostudiobr.VideoStudioBR.svg
@@ -100,7 +102,8 @@ jobs:
           chmod +x linuxdeploy
           curl -fsSL -o appimagetool https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
           chmod +x appimagetool
-          ./linuxdeploy --appdir AppDir --output appimage 2>/dev/null || true
+          export LD_LIBRARY_PATH="$PWD/AppDir/usr/lib/x86_64-linux-gnu:$PWD/AppDir/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+          ./linuxdeploy --appdir AppDir --output appimage || true
           ./appimagetool AppDir Video_Studio_BR-x86_64.AppImage
       - uses: actions/upload-artifact@v4
         with:
