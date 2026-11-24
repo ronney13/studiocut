@@ -110,7 +110,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: video-studio-br-appimage
-          path: '*.AppImage'
+          path: Video_Studio_BR-x86_64.AppImage
 
   flatpak:
     name: Flatpak (Ubuntu 26.04, experimental)
