@@ -73,6 +73,11 @@ Os módulos do MLT são resolvidos no prefixo do MSYS2
 (`C:\Users\ronne\msys64\ucrt64\lib\mlt`). Para distribuir em outro computador,
 copie essa pasta junto e defina `MLT_REPOSITORY`.
 
+## Release
+
+A release `v1.0.0` com os instaladores Windows e os pacotes Linux está em:
+https://github.com/ronney13/studiocut/releases/tag/v1.0.0
+
 ## Repositório
 
 - Fork: https://github.com/ronney13/studiocut (`origin`)
@@ -134,4 +139,4 @@ RPM, AppImage e Flatpak como artefatos do GitHub Actions (execute por
 - A checagem de atualização ainda consulta `check.shotcut.org`.
 - Testes JS disponíveis:
   `node src/qml/export-edl/test-node.js` e `node src/qml/export-chapters/test-node.js`.
-- Documentar a instalação em outras máquinas após a primeira release pública.
+- Revisar o workflow Linux caso o upstream eleve a versão mínima do MLT.
