@@ -590,5 +590,6 @@
         <file>oxygen-dark/index.theme</file>
         <file>shotcut-logo-320x320.png</file>
         <file>shotcut-logo-64.svg</file>
+        <file>studiocut-logo-64.svg</file>
     </qresource>
 </RCC>

@@ -12,8 +12,8 @@ endif()
 
 project(shotcut
   VERSION ${SHOTCUT_VERSION}
-  DESCRIPTION "cross-platform (Qt), open-source (GPLv3) video editor"
-  HOMEPAGE_URL "https://www.shotcut.org"
+  DESCRIPTION "StudioCut - cross-platform (Qt), open-source (GPLv3) video editor based on Shotcut"
+  HOMEPAGE_URL "https://github.com/mltframework/shotcut"
   LANGUAGES CXX
 )
 

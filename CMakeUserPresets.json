@@ -1,0 +1,30 @@
+{
+  "version": 8,
+  "configurePresets": [
+    {
+      "name": "msys2-local-debug",
+      "displayName": "MSYS2 UCRT64 local (debug)",
+      "description": "Build local usando MSYS2 instalado em C:/Users/ronne/msys64",
+      "inherits": "_cc-debug-base",
+      "environment": {
+        "HOME": "C:/Users/ronne/msys64/home/ronne",
+        "PKG_CONFIG_PATH": "C:/Users/ronne/msys64/ucrt64/lib/pkgconfig",
+        "Path": "C:/Users/ronne/msys64/ucrt64/bin;C:/Users/ronne/msys64/usr/bin;$penv{Path}"
+      },
+      "cacheVariables": {
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/msys2-local-debug",
+        "CMAKE_PREFIX_PATH": "C:/Users/ronne/msys64/ucrt64"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "msys2-local-debug",
+      "displayName": "Build MSYS2 UCRT64 local",
+      "configurePreset": "msys2-local-debug",
+      "targets": [
+        "all"
+      ]
+    }
+  ]
+}

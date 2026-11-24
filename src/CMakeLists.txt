@@ -281,6 +281,8 @@ add_custom_target(OTHER_FILES
   ../scripts/staple.sh
 )
 
+set_target_properties(shotcut PROPERTIES OUTPUT_NAME "studiocut")
+
 # Compile HDR gain shader (used by HdrPreview.qml ShaderEffect)
 find_program(QSB_EXECUTABLE qsb HINTS
   "${Qt6_DIR}/../../../bin" "${Qt6Core_DIR}/../../../bin")
@@ -378,7 +380,7 @@ if(APPLE)
   target_sources(shotcut PRIVATE macos.mm macos.h
     widgets/metalvideowidget.h widgets/metalvideowidget.mm)
   set_target_properties(shotcut PROPERTIES
-    OUTPUT_NAME "Shotcut"
+    OUTPUT_NAME "StudioCut"
     MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/packaging/macos/Info.plist.in)
   find_library(FOUNDATION Foundation)
   find_library(COCOA Cocoa)

@@ -11,11 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Shotcut</string>
+   <string>StudioCut</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../icons/resources.qrc">
-    <normaloff>:/icons/shotcut-logo-64.svg</normaloff>:/icons/shotcut-logo-64.svg</iconset>
+    <normaloff>:/icons/studiocut-logo-64.svg</normaloff>:/icons/studiocut-logo-64.svg</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
@@ -142,7 +142,7 @@
     <addaction name="actionTutorials"/>
     <addaction name="actionForum"/>
     <addaction name="separator"/>
-    <addaction name="actionAbout_Shotcut"/>
+    <addaction name="actionAbout_StudioCut"/>
     <addaction name="actionAbout_Qt"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
@@ -419,9 +419,9 @@
     <string notr="true">Ctrl+Q</string>
    </property>
   </action>
-  <action name="actionAbout_Shotcut">
+  <action name="actionAbout_StudioCut">
    <property name="text">
-    <string>&amp;About Shotcut</string>
+    <string>&amp;About StudioCut</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::AboutRole</enum>

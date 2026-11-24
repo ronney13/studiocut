@@ -177,7 +177,7 @@ public:
 #ifdef Q_OS_WIN
 #include <winbase.h>
         SetDllDirectoryA(appPath.toLocal8Bit());
-        CreateMutexA(NULL, FALSE, "Meltytech Shotcut Running Mutex");
+        CreateMutexA(NULL, FALSE, "StudioCut Running Mutex");
 #else
         dir.cdUp();
 #endif
@@ -189,14 +189,14 @@ public:
         dir.cd("qt6");
 #endif
         addLibraryPath(dir.absolutePath());
-        setOrganizationName("Meltytech");
+        setOrganizationName("StudioCut");
 #if defined(Q_OS_UNIX) && !defined(Q_OS_MAC)
-        setOrganizationDomain("shotcut.org");
-        setDesktopFileName("org.shotcut.Shotcut");
+        setOrganizationDomain("studiocut.local");
+        setDesktopFileName("org.studiocut.StudioCut");
 #else
-        setOrganizationDomain("meltytech.com");
+        setOrganizationDomain("studiocut.local");
 #endif
-        setApplicationName("Shotcut");
+        setApplicationName("StudioCut");
         setApplicationVersion(SHOTCUT_VERSION);
 
         // Process command line options.
@@ -206,7 +206,7 @@ public:
 #ifndef Q_OS_WIN
         QCommandLineOption fullscreenOption(
             "fullscreen",
-            QCoreApplication::translate("main", "Fill the screen with the Shotcut window."));
+            QCoreApplication::translate("main", "Fill the screen with the StudioCut window."));
         parser.addOption(fullscreenOption);
 #endif
         QCommandLineOption noupgradeOption(

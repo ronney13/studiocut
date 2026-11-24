@@ -3116,19 +3116,19 @@ void MainWindow::updateWindowTitle()
 #endif
 }
 
-void MainWindow::on_actionAbout_Shotcut_triggered()
+void MainWindow::on_actionAbout_StudioCut_triggered()
 {
     const auto copyright = QStringLiteral(
         "Copyright &copy; 2011-2026 <a href=\"https://www.meltytech.com/\">Meltytech</a>, LLC");
     const auto license = QStringLiteral(
         "<a href=\"https://www.gnu.org/licenses/gpl.html\">GNU General Public License v3.0</a>");
-    const auto url = QStringLiteral("https://www.shotcut.org/");
+    const auto url = QStringLiteral("https://github.com/mltframework/shotcut");
     QMessageBox::about(
         this,
         tr("About %1").arg(qApp->applicationName()),
         QStringLiteral(
-            "<h1>Shotcut version %2</h1>"
-            "<p><a href=\"%3\">%1</a> is a free, open source, cross platform video editor.</p>"
+            "<h1>StudioCut version %2</h1>"
+            "<p><a href=\"%3\">%1</a> is a free, open source, cross platform video editor based on <a href=\"https://www.shotcut.org/\">Shotcut</a>.</p>"
             "<small><p>%4</p>"
             "<p>Licensed under the %5</p>"
             "<p>This program proudly uses the following projects:<ul>"
