@@ -49,7 +49,8 @@ Script: `rebrand-studiocut.ps1` (na raiz do repositório). Ele altera:
 - Texto do diálogo "Sobre" com atribuição a Shotcut
 - Nome do executável (`studiocut.exe`) via `OUTPUT_NAME`
 - Metadados do executável Windows (`packaging/windows/shotcut.rc.in`)
-- Ícones: copiados como `studiocut-logo-64.{ico,svg}` (placeholders)
+- Ícones próprios: SVG vetorial (`icons/studiocut-logo-64.svg`) e ICO
+  multi-tamanho (`packaging/windows/studiocut-logo-64.ico`)
 
 O deploy de runtime (`deploy-runtime.ps1`) cobre:
 
@@ -82,7 +83,7 @@ oferta de código, e menciona explicitamente que StudioCut é baseado no Shotcut
 
 ## Pendências / próximos passos
 
-- Trocar os ícones placeholders por arte própria (pedir ao usuário antes de gerar).
+- ícones próprios já aplicados (SVG + ICO gerados a partir do mesmo desenho).
 - Substituir `studiocut.local` e a URL de verificação de versão por domínios
   reais do fork (a checagem de atualização ainda consulta `check.shotcut.org`).
 - Atualizar traduções (`translations/`) e textos de interface que ainda citam "Shotcut".
