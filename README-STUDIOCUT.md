@@ -63,6 +63,11 @@ Os módulos do MLT continuam sendo resolvidos no prefixo do MSYS2
 (`C:\Users\ronne\msys64\ucrt64\lib\mlt` nesta máquina). Para distribuir em outro
 computador, copie essa pasta junto e defina `MLT_REPOSITORY`.
 
+## Repositório
+
+- Fork: https://github.com/ronney13/studiocut (`origin`)
+- Upstream: https://github.com/mltframework/shotcut.git (`upstream`)
+
 ## Validação
 
 - Build: concluído (`BUILD_EXIT=0`).
@@ -89,4 +94,5 @@ oferta de código, e menciona explicitamente que StudioCut é baseado no Shotcut
 - Atualizar traduções (`translations/`) e textos de interface que ainda citam "Shotcut".
 - Rodar os testes JS disponíveis:
   `node src/qml/export-edl/test-node.js` e `node src/qml/export-chapters/test-node.js`.
-- Criar seu próprio remote Git para o fork e fazer push.
+- Publicar releases/instalador e documentar a instalação para outras máquinas
+  (copiar `lib\mlt` do MSYS2 e definir `MLT_REPOSITORY`).
