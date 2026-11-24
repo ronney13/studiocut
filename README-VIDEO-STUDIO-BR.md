@@ -75,8 +75,10 @@ copie essa pasta junto e defina `MLT_REPOSITORY`.
 
 ## Release
 
-A release `v1.0.0` com os instaladores Windows e os pacotes Linux está em:
-https://github.com/ronney13/studiocut/releases/tag/v1.0.0
+A release `v1.2.0` com os instaladores Windows e os pacotes Linux está em:
+https://github.com/ronney13/studiocut/releases/tag/v1.2.0
+
+Marcos anteriores: [v1.1.0](https://github.com/ronney13/studiocut/releases/tag/v1.1.0) (nova casca QML) e [v1.0.0](https://github.com/ronney13/studiocut/releases/tag/v1.0.0) (release inicial).
 
 ## Repositório
 
@@ -112,7 +114,7 @@ Gera em `install\installers\`:
 
 - `video-studio-br.msi` — MSI WiX 5 (instala em `Program Files\Vídeo Studio BR`,
   atalhos no menu Iniciar e na área de trabalho, desinstalação pelo Painel de Controle);
-- `video-studio-br-setup.exe` — bootstrapper Burn com licença RTF e o MSI embutido.
+- `video-studio-br-setup.exe` — bootstrapper Burn com tema azul/noite, licença RTF em pt-BR e o MSI embutido.
 
 Requisitos locais: WiX 5 (`wix.exe`) e as extensões
 `WixToolset.UI.wixext` e `WixToolset.BootstrapperApplications.wixext`

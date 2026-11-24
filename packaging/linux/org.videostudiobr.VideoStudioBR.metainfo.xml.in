@@ -5,17 +5,17 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-only</project_license>
   <name>Vídeo Studio BR</name>
-  <summary>Editor de vídeo livre e de código aberto</summary>
+  <summary>Editor de vídeo livre, em português, com interface moderna</summary>
   <description>
     <p>
       Vídeo Studio BR é um editor de vídeo livre, de código aberto e multiplataforma,
       derivado do Shotcut. Mantém paridade funcional com o projeto original e traz
-      interface em português do Brasil e tema dark moderno.
+      uma casca QML moderna em azul/noite, com interface em português do Brasil.
     </p>
     <p>
       Oferece edição não linear em múltiplas trilhas, amplo suporte a formatos via
       FFmpeg/MLT, filtros de áudio e vídeo, captura de tela e câmera, além de
-      monitoramento externo.
+      monitoramento externo e exportação configurável.
     </p>
   </description>
   <developer_name>Vídeo Studio BR (baseado em Shotcut, Meltytech LLC)</developer_name>

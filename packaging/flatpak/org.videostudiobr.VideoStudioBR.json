@@ -29,7 +29,8 @@
         "install -Dm755 /app/video-studio-br/bin/video-studio-br /app/bin/video-studio-br",
         "install -Dm644 /app/video-studio-br/share/applications/org.videostudiobr.VideoStudioBR.desktop /app/share/applications/org.videostudiobr.VideoStudioBR.desktop",
         "install -Dm644 /app/video-studio-br/share/metainfo/org.videostudiobr.VideoStudioBR.metainfo.xml /app/share/metainfo/org.videostudiobr.VideoStudioBR.metainfo.xml",
-        "install -Dm644 /app/video-studio-br/share/icons/hicolor/scalable/apps/org.videostudiobr.VideoStudioBR.svg /app/share/icons/hicolor/scalable/apps/org.videostudiobr.VideoStudioBR.svg"
+        "install -Dm644 /app/video-studio-br/share/icons/hicolor/scalable/apps/org.videostudiobr.VideoStudioBR.svg /app/share/icons/hicolor/scalable/apps/org.videostudiobr.VideoStudioBR.svg",
+        "for size in 16 24 32 48 64 128 256; do install -Dm644 /app/video-studio-br/share/icons/hicolor/${size}x${size}/apps/org.videostudiobr.VideoStudioBR.png /app/share/icons/hicolor/${size}x${size}/apps/org.videostudiobr.VideoStudioBR.png; done"
       ],
       "sources": [
         {

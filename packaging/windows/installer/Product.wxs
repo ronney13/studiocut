@@ -1,6 +1,6 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
      xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
-  <?define ProductVersion = "1.0.0.0" ?>
+  <?define ProductVersion = "1.2.0.0" ?>
   <?define UpgradeCode = "A056EFAB-2035-4CDB-8AA9-36C87D29E8E0" ?>
 
   <Package Name="Vídeo Studio BR"
@@ -20,7 +20,13 @@
 
     <Property Id="ARPPRODUCTICON" Value="AppIcon" />
     <Property Id="ARPHELPLINK" Value="https://github.com/ronney13/studiocut" />
-    <Icon Id="AppIcon" SourceFile="..\studiocut-logo-64.ico" />
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/ronney13/studiocut" />
+    <Icon Id="AppIcon" SourceFile="..\videostudiobr.ico" />
+
+    <WixVariable Id="WixUIBannerBmp" Value="banner.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="dialog.bmp" />
+    <WixVariable Id="WixUIExclamationIco" Value="..\videostudiobr.ico" />
+    <WixVariable Id="WixUIInfoIco" Value="..\videostudiobr.ico" />
 
     <StandardDirectory Id="ProgramFiles64Folder">
       <Directory Id="INSTALLFOLDER" Name="Vídeo Studio BR" />

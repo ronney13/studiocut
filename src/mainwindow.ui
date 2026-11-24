@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../icons/resources.qrc">
-    <normaloff>:/icons/studiocut-logo-64.svg</normaloff>:/icons/studiocut-logo-64.svg</iconset>
+    <normaloff>:/icons/videostudiobr-mark.svg</normaloff>:/icons/videostudiobr-mark.svg</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout">

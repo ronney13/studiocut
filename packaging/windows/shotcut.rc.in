@@ -1,6 +1,6 @@
 #include <windows.h>
 
-IDI_ICON1	ICON	DISCARDABLE	"studiocut-logo-64.ico"
+IDI_ICON1	ICON	DISCARDABLE	"videostudiobr.ico"
 
 VS_VERSION_INFO VERSIONINFO
     FILEVERSION ${PRODUCT_VERSION},0

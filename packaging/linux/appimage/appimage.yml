@@ -4,6 +4,6 @@ verbose: true
 script:
   - mkdir -p usr/bin
   - cp -a ../../../../install/linux-release/. usr/bin/
-  - cp -p ../../../../icons/studiocut-logo-64.svg org.videostudiobr.VideoStudioBR.svg
+  - cp -p ../../../../icons/videostudiobr-mark.svg org.videostudiobr.VideoStudioBR.svg
   - cp -p ../../../../packaging/linux/video-studio-br.desktop video-studio-br.desktop
   - desktop-file-edit --set-key=Exec --set-value=video-studio-br video-studio-br.desktop

@@ -545,7 +545,7 @@ int main(int argc, char **argv)
     ::qputenv(kWatchdogEnvVar, "1");
 #endif
     if (::qEnvironmentVariableIsSet(kWatchdogEnvVar)) {
-        QSplashScreen splash(QPixmap(":/icons/studiocut-logo-64.svg")
+        QSplashScreen splash(QPixmap(":/icons/videostudiobr-mark.svg")
                                  .scaled(320, 320, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
         // Log some basic info.

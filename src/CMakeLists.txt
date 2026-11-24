@@ -432,9 +432,14 @@ if(UNIX AND NOT APPLE)
   install(FILES ${CMAKE_SOURCE_DIR}/packaging/linux/org.shotcut.Shotcut.xml
     DESTINATION ${CMAKE_INSTALL_DATADIR}/mime/packages/
     RENAME org.videostudiobr.VideoStudioBR.xml)
-  install(FILES ${CMAKE_SOURCE_DIR}/icons/studiocut-logo-64.svg
+  install(FILES ${CMAKE_SOURCE_DIR}/icons/videostudiobr-mark.svg
     DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps/
     RENAME org.videostudiobr.VideoStudioBR.svg)
+  foreach(icon_size 16 24 32 48 64 128 256)
+    install(FILES ${CMAKE_SOURCE_DIR}/icons/videostudiobr-${icon_size}.png
+      DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/${icon_size}x${icon_size}/apps/
+      RENAME org.videostudiobr.VideoStudioBR.png)
+  endforeach()
   install(FILES ${CMAKE_SOURCE_DIR}/packaging/linux/shotcut.1
     DESTINATION ${CMAKE_INSTALL_DATADIR}/man/man1/
     RENAME video-studio-br.1)

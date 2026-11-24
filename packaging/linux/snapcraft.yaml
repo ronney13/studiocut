@@ -1,9 +1,10 @@
 name: video-studio-br
-version: '1.0.0'
+version: '1.2.0'
 summary: Editor de vídeo livre baseado no Shotcut
 description: |
   Vídeo Studio BR é um editor de vídeo multiplataforma, livre e de código aberto,
-  derivado do Shotcut, com interface em português do Brasil e tema dark moderno.
+  derivado do Shotcut, com interface em português do Brasil, casca QML moderna
+  em azul/noite e paridade funcional com o projeto original.
 
 base: core22
 grade: stable
@@ -22,4 +23,8 @@ parts:
     organize:
       video-studio-br: video-studio-br
       packaging/linux/video-studio-br.desktop: usr/share/applications/org.videostudiobr.VideoStudioBR.desktop
-      icons/studiocut-logo-64.svg: usr/share/icons/hicolor/scalable/apps/org.videostudiobr.VideoStudioBR.svg
+      icons/videostudiobr-mark.svg: usr/share/icons/hicolor/scalable/apps/org.videostudiobr.VideoStudioBR.svg
+      icons/videostudiobr-256.png: usr/share/icons/hicolor/256x256/apps/org.videostudiobr.VideoStudioBR.png
+      icons/videostudiobr-128.png: usr/share/icons/hicolor/128x128/apps/org.videostudiobr.VideoStudioBR.png
+      icons/videostudiobr-64.png: usr/share/icons/hicolor/64x64/apps/org.videostudiobr.VideoStudioBR.png
+      icons/videostudiobr-48.png: usr/share/icons/hicolor/48x48/apps/org.videostudiobr.VideoStudioBR.png

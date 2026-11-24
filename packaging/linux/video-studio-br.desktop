@@ -1,13 +1,14 @@
 [Desktop Entry]
 Type=Application
-Version=1.0
+Version=1.2
 Name=Vídeo Studio BR
 GenericName=Editor de Vídeo
-Comment=Editor de vídeo livre e de código aberto baseado no Shotcut
+Comment=Editor de vídeo livre baseado no Shotcut, em português
 Exec=video-studio-br %F
 Icon=org.videostudiobr.VideoStudioBR
 Terminal=false
+StartupNotify=true
 Categories=AudioVideo;Video;AudioVideoEditing;
-Keywords=video;audio;editing;mlt;shotcut;
+Keywords=video;audio;editing;mlt;shotcut;videostudio;
 MimeType=application/vnd.mlt+xml;video/mp4;video/x-matroska;video/webm;video/quicktime;video/x-msvideo;video/mpeg;audio/mpeg;audio/flac;audio/x-wav;image/png;image/jpeg;
 StartupWMClass=video-studio-br

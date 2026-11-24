@@ -2,10 +2,15 @@ import QtQuick
 
 Rectangle {
     id: rail
-    width: 78
+    width: 82
     color: theme.surface
 
     ShellTheme { id: theme }
+
+    gradient: Gradient {
+        GradientStop { position: 0.0; color: "#0a1426" }
+        GradientStop { position: 1.0; color: theme.surface }
+    }
 
     Rectangle {
         anchors.top: parent.top
@@ -17,7 +22,7 @@ Rectangle {
 
     Column {
         anchors.top: parent.top
-        anchors.topMargin: 12
+        anchors.topMargin: 10
         anchors.horizontalCenter: parent.horizontalCenter
         spacing: 4
 
@@ -33,26 +38,38 @@ Rectangle {
                 ListElement { panel: "jobs"; glyph: "⚙"; label: "Tarefas" }
             }
             delegate: Item {
-                width: 66
-                height: 62
+                id: navItem
+                width: 70
+                height: 64
+
+                property bool active: model.panel === "inicio"
+                                     ? shell.welcomeVisible
+                                     : shell.activePanel === model.panel
 
                 Rectangle {
                     anchors.fill: parent
-                    radius: 12
-                    color: active ? theme.surfaceHover : (navMouse.containsMouse ? theme.surfaceRaised : "transparent")
+                    anchors.margins: 2
+                    radius: 13
+                    color: navItem.active ? theme.accentDeep
+                                          : (navMouse.containsMouse ? theme.surfaceHover : "transparent")
+                    opacity: navItem.active ? 0.28 : 1.0
+                    border.color: navItem.active ? theme.accent : "transparent"
+                    border.width: navItem.active ? 1 : 0
+                    Behavior on color { ColorAnimation { duration: 140 } }
+                    Behavior on opacity { NumberAnimation { duration: 140 } }
+                }
 
-                    property bool active: model.panel === "inicio"
-                                         ? shell.welcomeVisible
-                                         : shell.activePanel === model.panel
-
-                    Rectangle {
-                        anchors.left: parent.left
-                        anchors.top: parent.top
-                        anchors.bottom: parent.bottom
-                        width: parent.active ? 3 : 0
-                        radius: 2
-                        color: theme.accent
-                    }
+                Rectangle {
+                    anchors.left: parent.left
+                    anchors.leftMargin: 1
+                    anchors.top: parent.top
+                    anchors.topMargin: 14
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: 14
+                    width: navItem.active ? 3 : 0
+                    radius: 2
+                    color: theme.accentLight
+                    Behavior on width { NumberAnimation { duration: 140 } }
                 }
 
                 Text {
@@ -60,16 +77,17 @@ Rectangle {
                     anchors.top: parent.top
                     anchors.topMargin: 8
                     text: model.glyph
-                    color: model.panel === "inicio" ? shell.welcomeVisible ? theme.accentLight : theme.muted
-                                                    : shell.activePanel === model.panel ? theme.accentLight : theme.muted
+                    color: navItem.active ? theme.accentLight
+                                          : (navMouse.containsMouse ? theme.text : theme.muted)
                     font.pixelSize: 22
+                    Behavior on color { ColorAnimation { duration: 140 } }
                 }
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 6
                     text: model.label
-                    color: theme.text
+                    color: navItem.active ? theme.text : theme.muted
                     font.pixelSize: 9
                 }
 
@@ -91,11 +109,21 @@ Rectangle {
         }
     }
 
-    Column {
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 12
+    Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
-        spacing: 4
+        anchors.bottom: footColumn.top
+        anchors.bottomMargin: 8
+        width: 46
+        height: 1
+        color: theme.border
+    }
+
+    Column {
+        id: footColumn
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 10
+        anchors.horizontalCenter: parent.horizontalCenter
+        spacing: 2
 
         Repeater {
             model: ListModel {
@@ -103,12 +131,20 @@ Rectangle {
                 ListElement { menu: "menuHelp"; glyph: "?"; label: "Ajuda" }
             }
             delegate: Item {
-                width: 66
-                height: 50
+                width: 70
+                height: 54
+
+                Rectangle {
+                    anchors.fill: parent
+                    anchors.margins: 3
+                    radius: 11
+                    color: footMouse.containsMouse ? theme.surfaceHover : "transparent"
+                    Behavior on color { ColorAnimation { duration: 120 } }
+                }
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.top: parent.top
-                    anchors.topMargin: 4
+                    anchors.topMargin: 5
                     text: model.glyph
                     color: footMouse.containsMouse ? theme.accentLight : theme.muted
                     font.pixelSize: 18
@@ -116,7 +152,7 @@ Rectangle {
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom: parent.bottom
-                    anchors.bottomMargin: 3
+                    anchors.bottomMargin: 4
                     text: model.label
                     color: theme.muted
                     font.pixelSize: 9

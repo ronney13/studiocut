@@ -95,7 +95,7 @@ jobs:
             -exec cp -f {} AppDir/usr/lib/ \;
           cp AppDir/usr/share/applications/org.videostudiobr.VideoStudioBR.desktop AppDir/video-studio-br.desktop
           sed -i 's|^Exec=.*|Exec=video-studio-br|' AppDir/video-studio-br.desktop
-          cp icons/studiocut-logo-64.svg AppDir/org.videostudiobr.VideoStudioBR.svg
+          cp icons/videostudiobr-mark.svg AppDir/org.videostudiobr.VideoStudioBR.svg
           printf '#!/bin/sh\nexec "%s/usr/bin/video-studio-br" "$@"\n' '${DIR}' > AppDir/AppRun
           chmod +x AppDir/AppRun
       - name: linuxdeploy + appimagetool

@@ -6,51 +6,78 @@ Rectangle {
 
     ShellTheme { id: theme }
 
+    gradient: Gradient {
+        GradientStop { position: 0.0; color: "#0c1628" }
+        GradientStop { position: 1.0; color: theme.surface }
+    }
+
     Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        height: 1
-        color: theme.border
+        height: 2
+        gradient: Gradient {
+            orientation: Gradient.Horizontal
+            GradientStop { position: 0.0; color: theme.accentDeep }
+            GradientStop { position: 0.35; color: theme.accent }
+            GradientStop { position: 1.0; color: theme.accentDeep }
+        }
+        opacity: 0.85
     }
 
     // Grupo esquerdo: identidade e menus
     Row {
         anchors.left: parent.left
-        anchors.leftMargin: 14
+        anchors.leftMargin: 12
         anchors.verticalCenter: parent.verticalCenter
-        spacing: 6
+        spacing: 4
 
-        Image {
-            width: 34
-            height: 34
-            source: "qrc:/icons/studiocut-logo-64.svg"
-            fillMode: Image.PreserveAspectFit
-            smooth: true
+        Item {
+            width: 40
+            height: 40
+
+            Rectangle {
+                anchors.fill: parent
+                radius: 11
+                color: theme.surfaceRaised
+                border.color: theme.border
+                border.width: 1
+            }
+
+            Image {
+                anchors.centerIn: parent
+                width: 30
+                height: 30
+                source: "qrc:/icons/videostudiobr-mark.svg"
+                fillMode: Image.PreserveAspectFit
+                smooth: true
+            }
         }
 
         Column {
-            width: 170
-            spacing: 0
+            anchors.verticalCenter: parent.verticalCenter
+            width: 172
+            spacing: 2
+
             Text {
                 text: "VÍDEO STUDIO BR"
                 color: theme.text
-                font.pixelSize: 13
+                font.pixelSize: 12
                 font.bold: true
-                font.letterSpacing: 1.1
+                font.letterSpacing: 1.3
             }
             Text {
                 text: shell.projectTitle
                 color: theme.muted
                 font.pixelSize: 11
-                width: 170
+                width: 172
                 elide: Text.ElideRight
             }
         }
 
         Rectangle {
             width: 1
-            height: 28
+            height: 26
             anchors.verticalCenter: parent.verticalCenter
             color: theme.border
         }
@@ -65,9 +92,16 @@ Rectangle {
                 ListElement { menu: "menuHelp"; label: "Ajuda" }
             }
             delegate: Item {
-                width: labelText.implicitWidth + 20
-                height: 36
+                width: labelText.implicitWidth + 22
+                height: 38
 
+                Rectangle {
+                    anchors.fill: parent
+                    anchors.margins: 3
+                    radius: 8
+                    color: mouse.containsMouse ? theme.surfaceHover : "transparent"
+                    Behavior on color { ColorAnimation { duration: 120 } }
+                }
                 Text {
                     id: labelText
                     anchors.centerIn: parent
@@ -94,13 +128,18 @@ Rectangle {
         spacing: 6
 
         Rectangle {
-            width: 110
-            height: 34
-            radius: 8
-            color: exportMouse.containsMouse ? "#3d92ff" : theme.accent
+            width: 118
+            height: 36
+            radius: 10
+            color: exportMouse.containsMouse ? theme.accentBright : theme.accent
+            border.color: theme.accentLight
+            border.width: exportMouse.containsMouse ? 1 : 0
+            Behavior on color { ColorAnimation { duration: 120 } }
+
             Text {
+                id: exportText
                 anchors.centerIn: parent
-                text: "Exportar"
+                text: "⤒   Exportar"
                 color: "#ffffff"
                 font.pixelSize: 12
                 font.bold: true
@@ -114,6 +153,13 @@ Rectangle {
             }
         }
 
+        Rectangle {
+            width: 1
+            height: 24
+            anchors.verticalCenter: parent.verticalCenter
+            color: theme.border
+        }
+
         Repeater {
             model: ListModel {
                 ListElement { symbol: "−"; action: "minimize" }
@@ -123,16 +169,21 @@ Rectangle {
             delegate: Item {
                 width: 34
                 height: 34
+
                 Rectangle {
                     anchors.fill: parent
-                    radius: 7
-                    color: winMouse.containsMouse ? theme.surfaceHover : "transparent"
+                    radius: 8
+                    color: {
+                        if (!winMouse.containsMouse)
+                            return "transparent"
+                        return model.action === "close" ? "#7a2230" : theme.surfaceHover
+                    }
+                    Behavior on color { ColorAnimation { duration: 120 } }
                 }
                 Text {
                     anchors.centerIn: parent
                     text: model.symbol
-                    color: model.action === "close" && winMouse.containsMouse ? "#ff6b6b"
-                                                                             : theme.text
+                    color: winMouse.containsMouse ? theme.text : theme.muted
                     font.pixelSize: 17
                 }
                 MouseArea {
