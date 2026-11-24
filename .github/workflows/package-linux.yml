@@ -89,8 +89,10 @@ jobs:
             -DCMAKE_INSTALL_PREFIX="$PWD/AppDir/usr" -DEXTERNAL_LAUNCHERS=ON
           cmake --build build --parallel 2
           cmake --install build
-          # O CuteLogger é instalado em lib/x86_64-linux-gnu; linuxdeploy procura em usr/lib.
-          cp AppDir/usr/lib/x86_64-linux-gnu/libCuteLogger.so AppDir/usr/lib/
+          # Dependendo do CMAKE_INSTALL_LIBDIR o CuteLogger vai para lib/ ou lib/<triplo>.
+          # Normalize em usr/lib para o linuxdeploy encontrá-lo.
+          find AppDir/usr -name 'libCuteLogger.so' -not -path 'AppDir/usr/lib/libCuteLogger.so' \
+            -exec cp -f {} AppDir/usr/lib/ \;
           cp AppDir/usr/share/applications/org.videostudiobr.VideoStudioBR.desktop AppDir/video-studio-br.desktop
           sed -i 's|^Exec=.*|Exec=video-studio-br|' AppDir/video-studio-br.desktop
           cp icons/studiocut-logo-64.svg AppDir/org.videostudiobr.VideoStudioBR.svg
