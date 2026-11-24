@@ -21,7 +21,7 @@ jobs:
           sudo apt-get install -y build-essential cmake ninja-build pkg-config \
             qt6-base-dev qt6-base-private-dev qt6-declarative-dev \
             qt6-tools-dev qt6-tools-dev-tools qt6-multimedia-dev \
-            libqt6svg6-dev libqt6websockets6-dev qt6-charts-dev \
+            libqt6svg6-dev qt6-websockets-dev qt6-charts-dev \
             libmlt-dev libmlt++-dev libfftw3-dev frei0r-plugins-dev libsdl2-dev \
             libx11-dev libdbus-1-dev libgl1-mesa-dev libxkbcommon-dev \
             libvulkan-dev libavformat-dev libavcodec-dev libavutil-dev \
@@ -78,7 +78,7 @@ jobs:
           sudo apt-get install -y build-essential cmake ninja-build pkg-config \
             qt6-base-dev qt6-base-private-dev qt6-declarative-dev \
             qt6-tools-dev qt6-tools-dev-tools qt6-multimedia-dev \
-            libqt6svg6-dev libqt6websockets6-dev qt6-charts-dev \
+            libqt6svg6-dev qt6-websockets-dev qt6-charts-dev \
             libmlt-dev libmlt++-dev libfftw3-dev frei0r-plugins-dev libsdl2-dev \
             libx11-dev libdbus-1-dev libgl1-mesa-dev libxkbcommon-dev \
             libvulkan-dev libavformat-dev libavcodec-dev libavutil-dev \
@@ -119,7 +119,7 @@ jobs:
           sudo apt-get install -y build-essential cmake ninja-build pkg-config \
             qt6-base-dev qt6-base-private-dev qt6-declarative-dev \
             qt6-tools-dev qt6-tools-dev-tools qt6-multimedia-dev \
-            libqt6svg6-dev libqt6websockets6-dev qt6-charts-dev \
+            libqt6svg6-dev qt6-websockets-dev qt6-charts-dev \
             libmlt-dev libmlt++-dev libfftw3-dev frei0r-plugins-dev libsdl2-dev \
             libx11-dev libdbus-1-dev libgl1-mesa-dev libxkbcommon-dev \
             libvulkan-dev libavformat-dev libavcodec-dev libavutil-dev \
