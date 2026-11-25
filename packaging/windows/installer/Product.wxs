@@ -1,6 +1,6 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
      xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
-  <?define ProductVersion = "1.2.0.0" ?>
+  <?define ProductVersion = "1.2.1.0" ?>
   <?define UpgradeCode = "A056EFAB-2035-4CDB-8AA9-36C87D29E8E0" ?>
 
   <Package Name="Vídeo Studio BR"

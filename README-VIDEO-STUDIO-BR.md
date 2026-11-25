@@ -75,10 +75,10 @@ copie essa pasta junto e defina `MLT_REPOSITORY`.
 
 ## Release
 
-A release `v1.2.0` com os instaladores Windows e os pacotes Linux está em:
-https://github.com/ronney13/studiocut/releases/tag/v1.2.0
+A release `v1.2.1` com os instaladores Windows e os pacotes Linux está em:
+https://github.com/ronney13/studiocut/releases/tag/v1.2.1
 
-Marcos anteriores: [v1.1.0](https://github.com/ronney13/studiocut/releases/tag/v1.1.0) (nova casca QML) e [v1.0.0](https://github.com/ronney13/studiocut/releases/tag/v1.0.0) (release inicial).
+Marcos anteriores: [v1.2.0](https://github.com/ronney13/studiocut/releases/tag/v1.2.0) (nova identidade visual), [v1.1.0](https://github.com/ronney13/studiocut/releases/tag/v1.1.0) (nova casca QML) e [v1.0.0](https://github.com/ronney13/studiocut/releases/tag/v1.0.0) (release inicial).
 
 ## Repositório
 
