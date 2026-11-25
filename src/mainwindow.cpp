@@ -4534,7 +4534,7 @@ void MainWindow::changeTheme(const QString &theme)
             "QMenuBar::item:selected { background: #2f81f7; color: #fff; }"
             "QMenu { background: #080e1b; color: #dce8f7; border: 1px solid #1b2b45;"
             " border-radius: 8px; }"
-            "QMenu::item { padding: 6px 24px; border-radius: 4px; }"
+            "QMenu::item { padding: 6px 14px; border-radius: 4px; }"
             "QMenu::item:selected { background: #2f81f7; color: #fff; }"
             "QMenu::separator { height: 1px; background: #1b2b45; margin: 4px 8px; }"
             // Barras de rolagem

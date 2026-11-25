@@ -57,7 +57,7 @@ signals:
     void maximizedChanged();
 
 private:
-    void showMenuFrom(const QString &menuName);
+    void showMenuFrom(const QString &menuName, const QPointF &pos);
     void setActivePanel(const QString &panel);
 
     MainWindow *m_window;

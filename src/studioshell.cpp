@@ -15,8 +15,11 @@
 #include <QAction>
 #include <QCursor>
 #include <QFileInfo>
+#include <QGuiApplication>
 #include <QMenu>
 #include <QPoint>
+#include <QRect>
+#include <QScreen>
 #include <QWidget>
 
 StudioShell::StudioShell(MainWindow *window, QObject *parent)
@@ -60,22 +63,41 @@ void StudioShell::trigger(const QString &actionName)
     }
 }
 
-void StudioShell::showMenu(const QString &menuName, const QPointF &)
+void StudioShell::showMenu(const QString &menuName, const QPointF &pos)
 {
-    showMenuFrom(menuName);
+    showMenuFrom(menuName, pos);
 }
 
-void StudioShell::showRailMenu(const QString &menuName, const QPointF &)
+void StudioShell::showRailMenu(const QString &menuName, const QPointF &pos)
 {
-    showMenuFrom(menuName);
+    showMenuFrom(menuName, pos);
 }
 
-void StudioShell::showMenuFrom(const QString &menuName)
+void StudioShell::showMenuFrom(const QString &menuName, const QPointF &pos)
 {
     // Os menus do .ui não têm objectName em runtime; o MainWindow resolve os
-    // ponteiros diretamente. QCursor::pos() já fornece coordenadas globais.
-    if (QMenu *menu = m_window->studioMenu(menuName))
-        menu->popup(QCursor::pos());
+    // ponteiros diretamente.
+    QMenu *menu = m_window->studioMenu(menuName);
+    if (!menu)
+        return;
+
+    // Garante espaço para rótulos longos (ex.: "Perguntas e Respostas
+    // Frequentes") mesmo com o padding da folha de estilo escura.
+    menu->setMinimumWidth(260);
+
+    // A casca QML informa a posição global do item clicado. Usar o cursor
+    // diretamente pode abrir o popup fora da tela e cortar o início/fim dos
+    // itens; mapToGlobal() já devolve coordenadas globais válidas.
+    QPoint point = pos.isNull() ? QCursor::pos() : pos.toPoint();
+    if (QScreen *screen = QGuiApplication::screenAt(point)) {
+        const QRect area = screen->availableGeometry();
+        const QSize size = menu->sizeHint();
+        point.setX(qBound(area.left(), point.x(), qMax(area.left(), area.right() - size.width())));
+        point.setY(qBound(area.top(), point.y(), qMax(area.top(), area.bottom() - size.height())));
+    }
+
+    menu->popup(point);
+    menu->raise();
 }
 
 void StudioShell::selectPanel(const QString &panel)

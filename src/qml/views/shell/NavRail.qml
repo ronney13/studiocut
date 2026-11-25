@@ -162,7 +162,7 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: shell.showRailMenu(model.menu, Qt.point(0, 0))
+                    onClicked: shell.showRailMenu(model.menu, mapToGlobal(0, height))
                 }
             }
         }
